@@ -17,7 +17,7 @@ const ErrorHandlerMiddleware = (err, req, res, next) => {
   } else if (err instanceof Errors.InternalServerError) {
     res.status(500).send({ message: err.message });
   } else {
-    res.status(500).send({ error: err, message: err.message });
+    res.status(500).send({ message: err.message });
   }
 };
 

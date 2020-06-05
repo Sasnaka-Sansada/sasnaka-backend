@@ -2,13 +2,13 @@ const RegistrarService = require('../services/registrar');
 const { Invitation } = require('../validators/registrar');
 
 /**
- * Controller which manages login
+ * Controller which manages inviting users
  * @abstract
  * @category Controllers
  */
 class RegistrarController {
   /**
-   * Logs a user into the system
+   * Invites a user into the system
    * @static @async
    * @param {Request} req
    * @param {Response} res
@@ -18,7 +18,7 @@ class RegistrarController {
     try {
       const { value, error } = Invitation.validate(req.body);
       if (error) throw (error);
-      RegistrarService.InviteUsers(value);
+      await RegistrarService.InviteUsers(value);
       res.sendStatus(200);
     } catch (err) {
       next(err);
