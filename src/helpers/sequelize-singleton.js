@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const logger = require('../loaders/logger');
+const logger = require('./logger');
 const config = require('../config');
 
 const env = config.env || 'development';
@@ -8,6 +8,11 @@ const databaseConfig = require('../config/database.json')[env];
 const self = module.exports;
 let sequelize;
 
+/**
+ * Singleton impl of returning a Sequelize instance
+ * @category Helpers
+ * @returns {Object} Sequelize
+ */
 exports.initialize = () => {
   if (!sequelize) {
     const options = {

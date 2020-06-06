@@ -1,5 +1,13 @@
 const Errors = require('../helpers/errors');
 
+/**
+ * HTTP error handler middleware
+ * @category Middlewares
+ * @param {Object} err
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Object} next
+ */
 // eslint-disable-next-line no-unused-vars
 const ErrorHandlerMiddleware = (err, req, res, next) => {
   if (err instanceof Errors.BadRequest) {

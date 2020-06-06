@@ -22,16 +22,34 @@ const IsLoggedMiddleware = () => (req, res, next) => {
   }
 };
 
-const IsPermittedMiddleware = (roleId) => (req, res, next) => {
+const IsNotLoggedMiddleware = () => (req, res, next) => {
   try {
-    if (req.user && roleId === req.user.roleId) {
+    if (!req.user) {
       next();
     } else {
-      throw new Errors.Unauthorized('Insufficient Permissions');
+      throw new Errors.Unauthorized('Already logged in');
     }
   } catch (err) {
     next(err);
   }
 };
 
-module.exports = { AuthMiddleware, IsLoggedMiddleware, IsPermittedMiddleware };
+const IsPermittedMiddleware = (roleId) => (req, res, next) => {
+  try {
+    if (req.user) {
+      if (roleId === req.user.roleId) {
+        next();
+      } else {
+        throw new Errors.Unauthorized('Insufficient Permissions');
+      }
+    } else {
+      throw new Errors.Unauthorized('Not logged in');
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = {
+  AuthMiddleware, IsLoggedMiddleware, IsPermittedMiddleware, IsNotLoggedMiddleware,
+};

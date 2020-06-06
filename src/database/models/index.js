@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
 const config = require('../../config');
-const logger = require('../../loaders/logger');
+const logger = require('../../helpers/logger');
 const sequelize = require('../../helpers/sequelize-singleton');
 
 const basename = path.basename(__filename);

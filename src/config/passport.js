@@ -2,6 +2,13 @@ const LocalStrategy = require('passport-local').Strategy;
 const { getDatabase } = require('../helpers/get_database');
 const { comparePassword } = require('../helpers/password');
 
+/**
+ * Configures passportjs
+ * Serializes the user object for session and deserializes
+ * @category Configuration
+ * @async
+ * @param {Object} passport
+ */
 const passportConfig = async (passport) => {
   passport.serializeUser((user, done) => {
     done(null, user.id);
@@ -22,7 +29,7 @@ const passportConfig = async (passport) => {
     (async (req, email, password, done) => {
       let user;
       try {
-        user = await database.User.findOne({ where: { email } });
+        user = await database.User.findOne({ where: { email, active: true } });
         if (!user) {
           return done(null, false, { message: 'No user by that email' });
         }

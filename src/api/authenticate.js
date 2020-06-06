@@ -34,9 +34,8 @@ class authController {
    */
   static async PostLogin(req, res, next) {
     try {
-      const { value, error } = Login.validate(req.body);
+      const { error } = Login.validate(req.body);
       if (error) throw (error);
-      await UserService.LoginUsers(value);
       res.sendStatus(200);
     } catch (err) {
       next(err);

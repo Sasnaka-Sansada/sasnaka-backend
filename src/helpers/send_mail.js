@@ -1,7 +1,14 @@
 const sgMail = require('@sendgrid/mail');
 const config = require('../config');
-const logger = require('../loaders/logger');
+const logger = require('./logger');
 
+/**
+ * The abstract mail sender
+ * Should be free from any implementation logic
+ * @category Helpers
+ * @param {*} reciever
+ * @param {*} token
+ */
 const sendMail = async (reciever, token) => {
   sgMail.setApiKey(config.email.sendgrid_api_key);
   const msg = {

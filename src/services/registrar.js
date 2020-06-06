@@ -1,7 +1,7 @@
 const { generateToken } = require('../helpers/generate_token');
 const { getDatabase } = require('../helpers/get_database');
 const Errors = require('../helpers/errors');
-const logger = require('../loaders/logger');
+const logger = require('../helpers/logger');
 const sendMail = require('../helpers/send_mail');
 
 /**

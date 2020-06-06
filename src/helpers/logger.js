@@ -1,3 +1,8 @@
+/**
+ * Logger used to log information differently based on their priority
+ * @category Helpers
+ */
+
 const winston = require('winston');
 const config = require('../config');
 

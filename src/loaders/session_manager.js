@@ -3,6 +3,11 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const sequelize = require('../helpers/sequelize-singleton');
 const config = require('../config');
 
+/**
+ * Session initialization middleware
+ * @returns {Object} session
+ * @category Middlewares
+ */
 const SessionManagerMiddleware = () => {
   const extendDefaultFields = (defaults, sessionInstance) => ({
     data: defaults.data,

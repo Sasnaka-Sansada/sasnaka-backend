@@ -1,8 +1,10 @@
 const database = require('../database/models');
-const logger = require('../loaders/logger');
+const logger = require('./logger');
 const Errors = require('./errors');
 
 /**
+ * Returns a database object
+ * @category Helpers
  * @returns {Object} database
  */
 const getDatabase = async () => {
