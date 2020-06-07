@@ -19,9 +19,11 @@ const configurations = {
   },
   email: {
     sendgrid_api_key: process.env.SENDGRID_API_KEY,
+    organization_email: process.env.ORGANIZATION_EMAIL,
   },
   saltRounds: parseInt(process.env.SALT_ROUNDS, 10),
   sessionSecret: process.env.SESSION_SECRET,
+  registerURL: process.env.REGISTERURL,
 };
 
 module.exports = configurations;
