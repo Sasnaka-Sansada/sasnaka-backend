@@ -1,11 +1,30 @@
-const cloudinary = require('cloudinary');
+const DatauriParser = require('datauri/parser');
 
-const imageUpload = async ({ file, folder }) => cloudinary.uploader.upload(file, {
-  folder,
-  transformation: [
-    { width: 1920, crop: 'limit' },
-    { quality: 'auto' },
-  ],
-});
+const path = require('path');
+
+const cloudinary = require('cloudinary').v2;
+const logger = require('./logger');
+
+const dataUri = (file) => {
+  const parser = new DatauriParser();
+  return (parser.format(path.extname(file.originalname).toString(), file.buffer)).content;
+};
+
+const imageUpload = async ({ file, folder }) => {
+  let imageData;
+  try {
+    imageData = await cloudinary.uploader.upload(dataUri(file), {
+      folder,
+      format: 'png',
+      transformation: [
+        { width: 1920, crop: 'limit' },
+        { quality: 'auto' },
+      ],
+    });
+  } catch (error) {
+    logger.error('Error while uploading image');
+  }
+  return imageData.secure_url;
+};
 
 module.exports = { imageUpload };
