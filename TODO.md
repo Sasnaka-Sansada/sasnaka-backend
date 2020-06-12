@@ -1,7 +1,9 @@
 ## todo
+- Pillar/ Project endpoints
 - Change email button href in the .env and add twitter link
-- Configure sendgrid mail to other mode once deployed
+- Configure sendgrid mail to other mode once deployed?? The maximum limit of sendgrid??
 - Deploy as soon as possible( Find the deploying platform first- Heroku??)
+- Check and fix npm vulnarabilities
 
 ## done
 - Finish register

@@ -21,6 +21,11 @@ const configurations = {
     sendgrid_api_key: process.env.SENDGRID_API_KEY,
     organization_email: process.env.ORGANIZATION_EMAIL,
   },
+  cloudinary: {
+    name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    secret: process.env.CLOUDINARY_SECRET,
+  },
   saltRounds: parseInt(process.env.SALT_ROUNDS, 10),
   sessionSecret: process.env.SESSION_SECRET,
   registerURL: process.env.REGISTERURL,

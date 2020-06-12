@@ -12,7 +12,7 @@ const getDatabase = async () => {
     return await database;
   } catch (error) {
     logger.error('Database connection issue');
-    throw Errors.InternalServerError('Database connection issue');
+    throw new Errors.InternalServerError('Database connection issue');
   }
 };
 

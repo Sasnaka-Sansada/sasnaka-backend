@@ -17,7 +17,7 @@ class RegistrarService {
    * @param {String} email email of the recipient
    * @param {String} roleId role id of the recipient
    */
-  static async sendInvitationMail({ email, roleId }) {
+  static async sendInvitationMail({ email, roleId, token }) {
     const emailComposition = {
       from: config.email.organization_email,
       to: email,
@@ -26,6 +26,7 @@ class RegistrarService {
       context: {
         role: roleId.toLowerCase(),
         registerURL: config.registerURL,
+        token,
       },
       attachments: [
         {
@@ -56,7 +57,8 @@ class RegistrarService {
       emailList.forEach(async (email) => {
         const token = generateToken(96);
         await database.Invitation.create({ email, roleId, token });
-        await this.sendInvitationMail({ email, roleId });
+
+        await this.sendInvitationMail({ email, roleId, token });
       });
     } catch (error) {
       logger.error('Error while inserting data');

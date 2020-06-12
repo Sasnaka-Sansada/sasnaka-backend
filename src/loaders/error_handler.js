@@ -1,3 +1,4 @@
+const { ValidationError } = require('@hapi/joi');
 const Errors = require('../helpers/errors');
 
 /**
@@ -24,6 +25,8 @@ const ErrorHandlerMiddleware = (err, req, res, next) => {
     res.status(422).send({ message: err.message });
   } else if (err instanceof Errors.InternalServerError) {
     res.status(500).send({ message: err.message });
+  } else if (err instanceof ValidationError) {
+    res.status(400).send({ message: err.message });
   } else {
     res.status(500).send({ message: err.message });
   }

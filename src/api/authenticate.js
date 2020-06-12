@@ -41,6 +41,22 @@ class authController {
       next(err);
     }
   }
+
+  /**
+   * Logs out a user from the system
+   * @static @async
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  static async PostLogout(req, res, next) {
+    try {
+      req.logout();
+      res.sendStatus(200);
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = authController;

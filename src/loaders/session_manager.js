@@ -1,5 +1,5 @@
-const session = require('express-session');
-const SequelizeStore = require('connect-session-sequelize')(session.Store);
+const expressSession = require('express-session');
+const SequelizeStore = require('connect-session-sequelize')(expressSession.Store);
 const sequelize = require('../helpers/sequelize-singleton');
 const config = require('../config');
 
@@ -9,13 +9,13 @@ const config = require('../config');
  * @category Middlewares
  */
 const SessionManagerMiddleware = () => {
-  const extendDefaultFields = (defaults, sessionInstance) => ({
+  const extendDefaultFields = (defaults, session) => ({
     data: defaults.data,
     expires: defaults.expires,
-    userId: sessionInstance.userId,
+    userId: (session.passport && session.passport.user) ? session.passport.user : null,
   });
 
-  return session({
+  return expressSession({
     secret: config.sessionSecret,
     resave: false,
     saveUninitialized: false,
