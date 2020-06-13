@@ -29,7 +29,7 @@ const passportConfig = async (passport) => {
     (async (req, email, password, done) => {
       let user;
       try {
-        user = await database.User.findOne({ where: { email, active: true } });
+        user = await database.User.findOne({ where: { email } });
         if (!user) {
           return done(null, false, { message: 'No user by that email' });
         }

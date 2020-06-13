@@ -13,14 +13,16 @@ const dataUri = (file) => {
 const imageUpload = async ({ file, folder }) => {
   let imageData;
   try {
-    imageData = await cloudinary.uploader.upload(dataUri(file), {
-      folder,
-      format: 'png',
-      transformation: [
-        { width: 1920, crop: 'limit' },
-        { quality: 'auto' },
-      ],
-    });
+    // turn transformations on once deployed
+    imageData = await cloudinary.uploader.upload(dataUri(file),
+      {
+        folder,
+        // format: 'png',
+        // transformation: [
+        //   { width: 1920, crop: 'limit' },
+        //   { quality: 'auto' },
+        // ],
+      });
   } catch (error) {
     logger.error('Error while uploading image');
   }

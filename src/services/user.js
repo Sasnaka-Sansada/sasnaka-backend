@@ -20,14 +20,14 @@ class UserService {
   }) {
     const database = await getDatabase();
 
-    const invitation = await database.Invitation.findOne({ where: { token, active: true } });
+    const invitation = await database.Invitation.findOne({ where: { token } });
 
     if (!invitation) {
       throw new Errors.BadRequest('The token is either expired or invalid');
     }
 
     const currentUser = await database.User.findOne({
-      where: { email: invitation.email, active: true },
+      where: { email: invitation.email },
     });
 
     if (currentUser) {
@@ -38,8 +38,8 @@ class UserService {
 
     try {
       await database.sequelize.transaction(async (t) => {
-        await database.Invitation.update(
-          { active: false }, { where: { email: invitation.email } }, { transaction: t },
+        await database.Invitation.destroy(
+          { where: { email: invitation.email }, transaction: t },
         );
 
         await database.User.create({

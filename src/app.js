@@ -54,3 +54,8 @@ app.use(ErrorHandlerMiddleware);
 app.listen(configurations.port, () => {
   logger.info('Sasnaka backend up and running');
 });
+
+// 404 error handler
+app.use((req, res) => {
+  res.status(404).send({ message: '404 route not found' });
+});

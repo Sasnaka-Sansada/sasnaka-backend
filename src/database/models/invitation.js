@@ -7,11 +7,6 @@ module.exports = (sequelize, Sequelize) => {
       primaryKey: true,
       defaultValue: Sequelize.UUIDV4,
     },
-    active: {
-      type: Sequelize.BOOLEAN,
-      allowNull: false,
-      defaultValue: true,
-    },
     email: {
       type: Sequelize.STRING(1023),
       allowNull: false,
@@ -31,7 +26,7 @@ module.exports = (sequelize, Sequelize) => {
     updatedAt: {
       type: Sequelize.DATE,
     },
-  }, {});
+  }, { paranoid: true });
 
   // eslint-disable-next-line no-unused-vars
   Invitation.associate = (models) => {

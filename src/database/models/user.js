@@ -9,7 +9,6 @@ module.exports = (sequelize, Sequelize) => {
     },
     email: {
       type: Sequelize.STRING(1023),
-      unique: true,
       allowNull: false,
       isEmail: true,
     },
@@ -29,18 +28,13 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.ENUM(Roles),
       allowNull: false,
     },
-    active: {
-      type: Sequelize.BOOLEAN,
-      allowNull: false,
-      defaultValue: true,
-    },
     createdAt: {
       type: Sequelize.DATE,
     },
     updatedAt: {
       type: Sequelize.DATE,
     },
-  }, {});
+  }, { paranoid: true });
 
   // eslint-disable-next-line no-unused-vars
   User.associate = (models) => {

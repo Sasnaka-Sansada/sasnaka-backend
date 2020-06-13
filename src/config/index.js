@@ -18,17 +18,17 @@ const configurations = {
     level: process.env.LOG_LEVEL || 'info',
   },
   email: {
-    sendgrid_api_key: process.env.SENDGRID_API_KEY,
-    organization_email: process.env.ORGANIZATION_EMAIL,
+    sendgrid_api_key: process.env.SENDGRID_API_KEY || '',
+    organization_email: process.env.ORGANIZATION_EMAIL || 'sasnakasansadasystem@gmail.com',
   },
   cloudinary: {
-    name: process.env.CLOUDINARY_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    secret: process.env.CLOUDINARY_SECRET,
+    name: process.env.CLOUDINARY_NAME || 'sasnaka-sansada',
+    api_key: process.env.CLOUDINARY_API_KEY || '',
+    secret: process.env.CLOUDINARY_SECRET || '',
   },
-  saltRounds: parseInt(process.env.SALT_ROUNDS, 10),
-  sessionSecret: process.env.SESSION_SECRET,
-  registerURL: process.env.REGISTERURL,
+  saltRounds: parseInt(process.env.SALT_ROUNDS, 10) || 10,
+  sessionSecret: process.env.SESSION_SECRET || '',
+  registerURL: process.env.REGISTERURL || '',
 };
 
 module.exports = configurations;
