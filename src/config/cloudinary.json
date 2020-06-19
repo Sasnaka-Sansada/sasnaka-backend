@@ -3,5 +3,8 @@
     "ProjectIntroduction": "ProjectIntroduction",
     "ProjectObjective": "ProjectObjective",
     "ProjectProcess": "ProjectProcess"
+  },
+  "Cordinator": {
+    "Profile": "CordinatorProfile"
   }
 }

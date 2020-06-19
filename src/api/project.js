@@ -1,5 +1,7 @@
 const ProjectService = require('../services/project');
-const { CreateProject, ProjectId, UpdateProject } = require('../validators/project');
+const {
+  CreateProject, ProjectId, UpdateProject, ProjectPiller,
+} = require('../validators/project');
 const { ImageValidator } = require('../validators/image_validator');
 
 /**
@@ -13,13 +15,14 @@ class ProjectController {
    * @static @async
    * @param {Request} req
    * @param {Response} res
-   * @param {NextFunct = require('../validators/image_validator')ion} next
+   * @param {NextFunction} next
    */
   static async PostCreateProject(req, res, next) {
     try {
       const { value, error } = CreateProject.validate(req.body);
       if (error) throw (error);
-      const { imageError, images } = ImageValidator(req.files);
+      const { imageError, images } = ImageValidator(req.files,
+        ['introductionImage', 'objectiveImage', 'processImage']);
       if (imageError) throw imageError;
       const project = await ProjectService.CreateProject({ ...value, ...images });
       res.send(project).status(200);
@@ -29,7 +32,7 @@ class ProjectController {
   }
 
   /**
-   * Creates a project
+   * Deletes a project
    * @static @async
    * @param {Request} req
    * @param {Response} res
@@ -47,7 +50,7 @@ class ProjectController {
   }
 
   /**
-   * Creates a project
+   * Gets a project
    * @static @async
    * @param {Request} req
    * @param {Response} res
@@ -75,10 +78,45 @@ class ProjectController {
     try {
       const { value, error } = UpdateProject.validate({ id: req.params.id, ...req.body });
       if (error) throw (error);
-      const { imageError, images } = ImageValidator(req.files);
+      const { imageError, images } = ImageValidator(req.files, ['introductionImage', 'objectiveImage', 'processImage']);
       if (imageError) throw imageError;
       const project = await ProjectService.UpdateProject({ ...value, ...images });
       res.send(project).status(200);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  /**
+   * Lists all projects
+   * @static @async
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  static async GetListProjects(req, res, next) {
+    try {
+      const projects = await ProjectService.ListProjects();
+      res.send(projects).status(200);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  /**
+   * Lists all projects of a given piller
+   * @static @async
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  static async GetListProjectsOfAPiller(req, res, next) {
+    try {
+      const { value, error } = ProjectPiller.validate({ pillerId: req.params.pillerId });
+      console.log(value);
+      if (error) throw (error);
+      const projects = await ProjectService.ListProjectsOfAPiller(value);
+      res.send(projects).status(200);
     } catch (err) {
       next(err);
     }

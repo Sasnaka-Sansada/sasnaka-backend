@@ -1,4 +1,5 @@
 const Errors = require('../helpers/errors');
+const { compareTwoArrays } = require('../helpers/minihelpers');
 
 const validateType = (
   imageBufferHeaders, fileBuffer, mimetype,
@@ -28,7 +29,15 @@ const validateType = (
   },
 );
 
-const ImageValidator = (imageArray) => {
+const ImageValidator = (imageArray, requiredImages) => {
+  // check if the required images are included
+  const imageNames = imageArray.map((image) => image.fieldname);
+  const isEqual = compareTwoArrays(imageNames, requiredImages);
+  if (!isEqual) {
+    const imageError = new Errors.BadRequest('Less/ More images than required');
+    return { imageError, images: null };
+  }
+
   const imageVufferHeaders = [
     {
       prefix: [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a],

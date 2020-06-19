@@ -24,4 +24,10 @@ const ProjectId = Joi.object().keys({
   id: Joi.string().uuid().required(),
 });
 
-module.exports = { CreateProject, ProjectId, UpdateProject };
+const ProjectPiller = Joi.object().keys({
+  pillerId: Joi.string().valid(...Pillers).required(),
+});
+
+module.exports = {
+  CreateProject, ProjectId, UpdateProject, ProjectPiller,
+};

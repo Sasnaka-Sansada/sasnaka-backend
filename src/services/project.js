@@ -4,7 +4,7 @@ const Errors = require('../helpers/errors');
 const logger = require('../helpers/logger');
 const { imageUpload } = require('../helpers/image_handler');
 const cloudinaryDir = require('../config/cloudinary.json');
-
+const { groupByKey, convertToTitleCase } = require('../helpers/minihelpers');
 
 /**
  * Service that manages project functionalities
@@ -37,8 +37,10 @@ class ProjectService {
   }) {
     const database = await getDatabase();
 
-    // make sure to make them lower case and compare
-    const previousHeader = await database.Project.findOne({ where: { header } });
+    // make header titlecase
+    const headerTitlecase = convertToTitleCase(header);
+    // check for previous same header projects
+    const previousHeader = await database.Project.findOne({ where: { header: headerTitlecase } });
     if (previousHeader) {
       throw new Errors.BadRequest('A project with the header already exists');
     }
@@ -62,7 +64,7 @@ class ProjectService {
 
     try {
       project = await database.Project.create({
-        header,
+        header: headerTitlecase,
         subHeader,
         introduction,
         objective,
@@ -138,8 +140,9 @@ class ProjectService {
       throw new Errors.BadRequest('A project with the given id does not exist');
     }
 
+    const headerTitlecase = convertToTitleCase(header);
     const similarNameProject = await database.Project.findOne(
-      { where: { header, id: { [Op.ne]: id } } },
+      { where: { header: headerTitlecase, id: { [Op.ne]: id } } },
     );
     if (similarNameProject) {
       throw new Errors.BadRequest('A project with the given header already exists');
@@ -156,7 +159,7 @@ class ProjectService {
       file: processImage, folder: cloudinaryDir.Project.ProjectProcess,
     });
 
-    project.header = header;
+    project.header = headerTitlecase;
     project.subHeader = subHeader;
     project.introduction = introduction;
     project.objective = objective;
@@ -174,6 +177,30 @@ class ProjectService {
     }
 
     return project;
+  }
+
+  /**
+     * Returns all projects of a given piller
+     * @returns {Project}[] array of all projects grouped into pillers
+  */
+  static async ListProjects() {
+    const database = await getDatabase();
+
+    const result = await database.Project.findAll({ order: [['createdAt', 'DESC']] });
+    const projects = groupByKey(result, 'pillerId', 'piller', 'projects');
+    return projects;
+  }
+
+  /**
+     * Returns all projects of a given piller
+     * @param {String} pillerId
+     * @returns {Project}[] array of all projects grouped into pillers
+  */
+  static async ListProjectsOfAPiller({ pillerId }) {
+    const database = await getDatabase();
+
+    const projects = await database.Project.findAll({ where: { pillerId } }, { order: [['createdAt', 'DESC']] });
+    return projects;
   }
 }
 
