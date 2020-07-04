@@ -34,7 +34,7 @@ module.exports = (sequelize, Sequelize) => {
     updatedAt: {
       type: Sequelize.DATE,
     },
-  }, { paranoid: true });
+  });
 
   // eslint-disable-next-line no-unused-vars
   User.associate = (models) => {

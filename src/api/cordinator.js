@@ -38,14 +38,14 @@ class CordinatorController {
    * @param {NextFunction} next
    */
   static async DeleteDeleteCordinator(req, res, next) {
-    // try {
-    //   const { value, error } = CordinatorId.validate({ id: req.params.id });
-    //   if (error) throw (error);
-    //   await CordinatorService.DeleteCordinator(value);
-    //   res.sendStatus(200);
-    // } catch (err) {
-    //   next(err);
-    // }
+    try {
+      const { value, error } = CordinatorId.validate({ id: req.params.id });
+      if (error) throw (error);
+      await CordinatorService.DeleteCordinator(value);
+      res.sendStatus(200);
+    } catch (err) {
+      next(err);
+    }
   }
 
   /**
@@ -56,14 +56,14 @@ class CordinatorController {
    * @param {NextFunction} next
    */
   static async GetGetCordinator(req, res, next) {
-    // try {
-    //   const { value, error } = CordinatorId.validate({ id: req.params.id });
-    //   if (error) throw (error);
-    //   const cordinator = await CordinatorService.GetCordinator(value);
-    //   res.send(cordinator).status(200);
-    // } catch (err) {
-    //   next(err);
-    // }
+    try {
+      const { value, error } = CordinatorId.validate({ id: req.params.id });
+      if (error) throw (error);
+      const cordinator = await CordinatorService.GetCordinator(value);
+      res.send(cordinator).status(200);
+    } catch (err) {
+      next(err);
+    }
   }
 
   /**
@@ -74,16 +74,16 @@ class CordinatorController {
    * @param {NextFunction} next
    */
   static async PutUpdateCordinator(req, res, next) {
-    // try {
-    //   const { value, error } = UpdateCordinator.validate({ id: req.params.id, ...req.body });
-    //   if (error) throw (error);
-    //   const { imageError, images } = ImageValidator(req.files);
-    //   if (imageError) throw imageError;
-    //   const cordinator = await CordinatorService.UpdateCordinator({ ...value, ...images });
-    //   res.send(cordinator).status(200);
-    // } catch (err) {
-    //   next(err);
-    // }
+    try {
+      const { value, error } = UpdateCordinator.validate({ id: req.params.id, ...req.body });
+      if (error) throw (error);
+      const { imageError, images } = ImageValidator(req.files, ['profileImage']);
+      if (imageError) throw imageError;
+      const cordinator = await CordinatorService.UpdateCordinator({ ...value, ...images });
+      res.send(cordinator).status(200);
+    } catch (err) {
+      next(err);
+    }
   }
 
   /**
@@ -94,31 +94,12 @@ class CordinatorController {
    * @param {NextFunction} next
    */
   static async GetListCordinators(req, res, next) {
-    // try {
-    //   const cordinators = await CordinatorService.ListCordinators();
-    //   res.send(cordinators).status(200);
-    // } catch (err) {
-    //   next(err);
-    // }
-  }
-
-  /**
-   * Lists all cordinators of a given project
-   * @static @async
-   * @param {Request} req
-   * @param {Response} res
-   * @param {NextFunction} next
-   */
-  static async GetListCordinatorsOfAPiller(req, res, next) {
-    // try {
-    //   const { value, error } = CordinatorPiller.validate({ pillerId: req.params.pillerId });
-    //   console.log(value);
-    //   if (error) throw (error);
-    //   const cordinators = await CordinatorService.ListCordinatorsOfAPiller(value);
-    //   res.send(cordinators).status(200);
-    // } catch (err) {
-    //   next(err);
-    // }
+    try {
+      const cordinators = await CordinatorService.ListCordinators();
+      res.send(cordinators).status(200);
+    } catch (err) {
+      next(err);
+    }
   }
 }
 

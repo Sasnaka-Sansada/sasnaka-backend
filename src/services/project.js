@@ -4,7 +4,7 @@ const Errors = require('../helpers/errors');
 const logger = require('../helpers/logger');
 const { imageUpload } = require('../helpers/image_handler');
 const cloudinaryDir = require('../config/cloudinary.json');
-const { groupByKey, convertToTitleCase } = require('../helpers/minihelpers');
+const { groupByKey, convertToTitleCase, formatResponse } = require('../helpers/minihelpers');
 
 /**
  * Service that manages project functionalities
@@ -79,6 +79,9 @@ class ProjectService {
       throw new Errors.InternalServerError('Error while inserting data');
     }
 
+    // remove timestamp attributes
+    project = formatResponse(project);
+
     return project;
   }
 
@@ -109,11 +112,13 @@ class ProjectService {
   static async GetProject({ id }) {
     const database = await getDatabase();
 
-    const project = await database.Project.findOne({ where: { id } });
+    let project = await database.Project.findOne({ where: { id } });
     if (!project) {
       throw new Errors.BadRequest('A project with the given id does not exist');
     }
 
+    // remove timestamp attributes
+    project = formatResponse(project);
     return project;
   }
 
@@ -135,7 +140,7 @@ class ProjectService {
   }) {
     const database = await getDatabase();
 
-    const project = await database.Project.findOne({ where: { id } });
+    let project = await database.Project.findOne({ where: { id } });
     if (!project) {
       throw new Errors.BadRequest('A project with the given id does not exist');
     }
@@ -176,6 +181,8 @@ class ProjectService {
       throw new Errors.InternalServerError('Error while inserting data');
     }
 
+    // remove timestamp attributes
+    project = formatResponse(project);
     return project;
   }
 
@@ -187,7 +194,11 @@ class ProjectService {
     const database = await getDatabase();
 
     const result = await database.Project.findAll({ order: [['createdAt', 'DESC']] });
-    const projects = groupByKey(result, 'pillerId', 'piller', 'projects');
+
+    // remove timestamp attributes
+    let projects = result.map((project) => formatResponse(project));
+
+    projects = groupByKey(projects, 'pillerId', 'piller', 'projects');
     return projects;
   }
 
@@ -199,7 +210,11 @@ class ProjectService {
   static async ListProjectsOfAPiller({ pillerId }) {
     const database = await getDatabase();
 
-    const projects = await database.Project.findAll({ where: { pillerId } }, { order: [['createdAt', 'DESC']] });
+    let projects = await database.Project.findAll({ where: { pillerId } }, { order: [['createdAt', 'DESC']] });
+
+    // remove timestamp attributes
+    projects = projects.map((project) => formatResponse(project));
+
     return projects;
   }
 }

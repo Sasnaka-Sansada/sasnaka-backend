@@ -1,10 +1,12 @@
-// const { Op } = require('sequelize');
 const { getDatabase } = require('../helpers/get_database');
 const Errors = require('../helpers/errors');
 const logger = require('../helpers/logger');
 const { imageUpload } = require('../helpers/image_handler');
 const cloudinaryDir = require('../config/cloudinary.json');
-// const { groupByKey, convertToTitleCase } = require('../helpers/minihelpers');
+const {
+  formatResponse, convertToTitleCase, groupByKey, changeObjectLabel,
+} = require('../helpers/minihelpers');
+
 
 /**
  * Service that manages cordinator functionalities
@@ -25,8 +27,7 @@ class CordinatorService {
      * @returns {string} pillerId pillerId of the cordinator
   */
   static async CreateCordinator({
-    firstName,
-    lastName,
+    name,
     university,
     description,
     alumni,
@@ -41,6 +42,10 @@ class CordinatorService {
       throw new Errors.BadRequest('A project with given project id does not exist');
     }
 
+    // convert name, university to titilecase
+    const nameTitlecase = convertToTitleCase(name);
+    const universityTitlecase = convertToTitleCase(university);
+
     // upload the file and get the url
     const profileImageUrl = await imageUpload({
       file: profileImage, folder: cloudinaryDir.Cordinator.Profile,
@@ -54,9 +59,8 @@ class CordinatorService {
 
     try {
       cordinator = await database.Cordinator.create({
-        firstName,
-        lastName,
-        university,
+        name: nameTitlecase,
+        university: universityTitlecase,
         description,
         alumni,
         profileImage: profileImageUrl,
@@ -67,130 +71,136 @@ class CordinatorService {
       throw new Errors.InternalServerError('Error while inserting data');
     }
 
-    return cordinator;
+    // remove timestamp attributes
+    cordinator = formatResponse(cordinator);
+
+    return { ...cordinator, pillerId: project.pillerId };
   }
 
-  // /**
-  //    * Deletes an existing cordinator
-  //    * @param {string} id id of the cordinator
-  // */
-  // static async DeleteCordinator({ id }) {
-  //   const database = await getDatabase();
+  /**
+     * Deletes an existing cordinator
+     * @param {string} id id of the cordinator
+  */
+  static async DeleteCordinator({ id }) {
+    const database = await getDatabase();
 
-  //   const cordinator = await database.Cordinator.findOne({ where: { id } });
-  //   if (!cordinator) {
-  //     throw new Errors.BadRequest('A cordinator with the given id does not exist');
-  //   }
+    const cordinator = await database.Cordinator.findOne({ where: { id } });
+    if (!cordinator) {
+      throw new Errors.BadRequest('A cordinator with the given id does not exist');
+    }
 
-  //   try {
-  //     await cordinator.destroy();
-  //   } catch (error) {
-  //     logger.error('Error while inserting data');
-  //     throw new Errors.InternalServerError('Error while inserting data');
-  //   }
-  // }
+    try {
+      await cordinator.destroy();
+    } catch (error) {
+      logger.error('Error while inserting data');
+      throw new Errors.InternalServerError('Error while inserting data');
+    }
+  }
 
-  // /**
-  //    * Returns an existing cordinator
-  //    * @param {string} id id of the cordinator
-  // */
-  // static async GetCordinator({ id }) {
-  //   const database = await getDatabase();
+  /**
+     * Returns an existing cordinator
+     * @param {string} id id of the cordinator
+  */
+  static async GetCordinator({ id }) {
+    const database = await getDatabase();
 
-  //   const cordinator = await database.Cordinator.findOne({ where: { id } });
-  //   if (!cordinator) {
-  //     throw new Errors.BadRequest('A cordinator with the given id does not exist');
-  //   }
+    let cordinator = await database.Cordinator.findOne({ where: { id } });
+    if (!cordinator) {
+      throw new Errors.BadRequest('A cordinator with the given id does not exist');
+    }
 
-  //   return cordinator;
-  // }
+    // remove timestamp attributes
+    cordinator = formatResponse(cordinator);
 
-  // /**
-  //    * Updates an existing cordinator
-  //    * @param {string} id id of the cordinator
-  // */
-  // static async UpdateCordinator({
-  //   id,
-  //   header,
-  //   subHeader,
-  //   introduction,
-  //   objective,
-  //   process,
-  //   introductionImage,
-  //   objectiveImage,
-  //   processImage,
-  //   pillerId,
-  // }) {
-  //   const database = await getDatabase();
+    const project = await database.Project.findOne({ where: { id: cordinator.projectId } });
 
-  //   const cordinator = await database.Cordinator.findOne({ where: { id } });
-  //   if (!cordinator) {
-  //     throw new Errors.BadRequest('A cordinator with the given id does not exist');
-  //   }
+    return { ...cordinator, pillerId: project.pillerId, projectHeader: project.header };
+  }
 
-  //   const headerTitlecase = convertToTitleCase(header);
-  //   const similarNameCordinator = await database.Cordinator.findOne(
-  //     { where: { header: headerTitlecase, id: { [Op.ne]: id } } },
-  //   );
-  //   if (similarNameCordinator) {
-  //     throw new Errors.BadRequest('A cordinator with the given header already exists');
-  //   }
+  /**
+     * Updates an existing cordinator
+     * @param {string} id id of the cordinator
+  */
+  static async UpdateCordinator({
+    id,
+    name,
+    university,
+    description,
+    alumni,
+    profileImage,
+    projectId,
+  }) {
+    const database = await getDatabase();
 
-  //   // upload the file and get the url
-  //   const introductionImageUrl = await imageUpload({
-  //     file: introductionImage, folder: cloudinaryDir.Cordinator.CordinatorIntroduction,
-  //   });
-  //   const objectiveImageUrl = await imageUpload({
-  //     file: objectiveImage, folder: cloudinaryDir.Cordinator.CordinatorObjective,
-  //   });
-  //   const processImageUrl = await imageUpload({
-  //     file: processImage, folder: cloudinaryDir.Cordinator.CordinatorProcess,
-  //   });
+    let cordinator = await database.Cordinator.findOne({ where: { id } });
+    if (!cordinator) {
+      throw new Errors.BadRequest('A cordinator with the given id does not exist');
+    }
 
-  //   cordinator.header = headerTitlecase;
-  //   cordinator.subHeader = subHeader;
-  //   cordinator.introduction = introduction;
-  //   cordinator.objective = objective;
-  //   cordinator.process = process;
-  //   cordinator.introductionImage = introductionImageUrl;
-  //   cordinator.objectiveImage = objectiveImageUrl;
-  //   cordinator.processImage = processImageUrl;
-  //   cordinator.pillerId = pillerId;
+    // convert name, university to titlecase
+    const nameTitlecase = convertToTitleCase(name);
+    const universityTitlecase = convertToTitleCase(university);
 
-  //   try {
-  //     await cordinator.save();
-  //   } catch (error) {
-  //     logger.error('Error while inserting data');
-  //     throw new Errors.InternalServerError('Error while inserting data');
-  //   }
+    // upload the file and get the url
+    const profileImageUrl = await imageUpload({
+      file: profileImage, folder: cloudinaryDir.Cordinator.Profile,
+    });
 
-  //   return cordinator;
-  // }
+    if (!profileImageUrl) {
+      throw new Errors.InternalServerError('Image upload failed');
+    }
 
-  // /**
-  //    * Returns all cordinators of a given piller
-  //    * @returns {Cordinator}[] array of all cordinators grouped into pillers
-  // */
-  // static async ListCordinators() {
-  //   const database = await getDatabase();
+    const project = await database.Project.findOne({ where: { id: projectId } });
+    if (!project) {
+      throw new Errors.InternalServerError('A project with given project is not available');
+    }
 
-  //   const result = await database.Cordinator.findAll({ order: [['createdAt', 'DESC']] });
-  //   const cordinators = groupByKey(result, 'pillerId', 'piller', 'cordinators');
-  //   return cordinators;
-  // }
+    cordinator.name = nameTitlecase;
+    cordinator.university = universityTitlecase;
+    cordinator.description = description;
+    cordinator.alumni = alumni;
+    cordinator.profileImage = profileImageUrl;
+    cordinator.projectId = projectId;
 
-  // /**
-  //    * Returns all cordinators of a given piller
-  //    * @param {String} pillerId
-  //    * @returns {Cordinator}[] array of all cordinators grouped into pillers
-  // */
-  // static async ListCordinatorsOfAPiller({ pillerId }) {
-  //   const database = await getDatabase();
+    try {
+      await cordinator.save();
+    } catch (error) {
+      logger.error('Error while inserting data');
+      throw new Errors.InternalServerError('Error while inserting data');
+    }
 
-  //   const cordinators = await database.Cordinator.findAll(
-  // { where: { pillerId } }, { order: [['createdAt', 'DESC']] });
-  //   return cordinators;
-  // }
+    // remove timestamp attributes
+    cordinator = formatResponse(cordinator);
+
+    return { ...cordinator, pillerId: project.pillerId };
+  }
+
+  /**
+     * Returns all cordinators
+     * @returns {Cordinator}[] array of all cordinators grouped into pillers
+  */
+  static async ListCordinators() {
+    const database = await getDatabase();
+
+    const result = await database.Cordinator.findAll({
+      order: [['createdAt', 'DESC']],
+      include: {
+        model: database.Project,
+        attributes: ['header', 'pillerId'],
+      },
+      raw: true,
+    });
+
+    // remove timestamp attributes
+    let cordinators = result.map((cordinator) => formatResponse(cordinator));
+
+    // change nested attribute labels
+    cordinators = result.map((cordinator) => changeObjectLabel('Project.header', 'projectHeader', cordinator));
+
+    cordinators = groupByKey(result, 'Project.pillerId', 'piller', 'cordinators');
+
+    return cordinators;
+  }
 }
 
 module.exports = CordinatorService;

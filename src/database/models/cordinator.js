@@ -5,11 +5,7 @@ module.exports = (sequelize, Sequelize) => {
       primaryKey: true,
       defaultValue: Sequelize.UUIDV4,
     },
-    firstName: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
-    lastName: {
+    name: {
       type: Sequelize.STRING,
       allowNull: false,
     },
@@ -34,11 +30,11 @@ module.exports = (sequelize, Sequelize) => {
     updatedAt: {
       type: Sequelize.DATE,
     },
-  }, { paranoid: true });
+  });
 
   // eslint-disable-next-line no-unused-vars
   Cordinator.associate = (models) => {
-    models.Cordinator.belongsTo(models.Project);
+    models.Cordinator.belongsTo(models.Project, { onDelete: 'cascade', hooks: true, foreignKey: 'projectId' });
   };
   return Cordinator;
 };

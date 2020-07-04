@@ -1,4 +1,5 @@
 /* eslint-disable no-param-reassign */
+
 /**
  * Groups an array by a given value
  * @category Helpers
@@ -10,6 +11,9 @@
  */
 const groupByKey = (array, key, keyName, valueName) => array.reduce((all, current) => {
   const v = key instanceof Function ? key(current) : current[key];
+
+  delete current[key];
+
   const el = all.find((r) => r && r[keyName] === v);
   if (el) {
     el[valueName].push(current);
@@ -19,6 +23,7 @@ const groupByKey = (array, key, keyName, valueName) => array.reduce((all, curren
   return all;
 }, []);
 
+
 /**
  * Converts a string to titlecase
  * @category Helpers
@@ -26,21 +31,59 @@ const groupByKey = (array, key, keyName, valueName) => array.reduce((all, curren
  * @returns {String} text converted into titlecase
  */
 const convertToTitleCase = (text) => {
+  if (text === undefined || text === null) return null;
   const articles = ['a', 'an', 'the', 'of', 'in', 'for', 'on'];
   const words = text.trim().split(' ');
   return words.reduce((all, current, index) => {
     if (index !== 0 && articles.includes(current.toLowerCase())) {
       all += `${current.toLowerCase()}`;
     } else {
-      all += `${current.charAt(0).toUpperCase() + current.slice(1)}`;
+      all += `${current.charAt(0).toUpperCase() + current.slice(1).toLowerCase()}`;
     }
     if (index !== words.length - 1) all += ' ';
     return all;
   }, '');
 };
 
+
+/**
+ * Compares two arrays
+ * @param {Object[]} array1
+ * @param {Object[]} array2
+ * @returns {boolean} true if equal false otherwise
+ */
 const compareTwoArrays = (
   array1, array2,
 ) => (array1.length === array2.length) && (array1.every((val) => array2.includes(val)));
 
-module.exports = { groupByKey, convertToTitleCase, compareTwoArrays };
+
+/**
+ * Formats response object by removing timestamp elements
+ * @param {Object} responseObject
+ * @returns {Object} formatted responseObject
+ */
+const formatResponse = (responseObject) => {
+  const formatObject = (responseObject.dataValues) ? responseObject.dataValues : responseObject;
+  delete formatObject.createdAt;
+  delete formatObject.updatedAt;
+  delete formatObject.deletedAt;
+
+  return formatObject;
+};
+
+/**
+ *
+ * @param {String} old
+ * @param {String} new
+ * @param {Object} object to be altered
+ * @returns {Object} altered object
+ * */
+const changeObjectLabel = (oldLabel, newLabel, object) => {
+  object[newLabel] = object[oldLabel];
+  delete object[oldLabel];
+  return object;
+};
+
+module.exports = {
+  groupByKey, convertToTitleCase, compareTwoArrays, formatResponse, changeObjectLabel,
+};

@@ -113,7 +113,6 @@ class ProjectController {
   static async GetListProjectsOfAPiller(req, res, next) {
     try {
       const { value, error } = ProjectPiller.validate({ pillerId: req.params.pillerId });
-      console.log(value);
       if (error) throw (error);
       const projects = await ProjectService.ListProjectsOfAPiller(value);
       res.send(projects).status(200);
