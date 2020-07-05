@@ -6,5 +6,8 @@
   },
   "Cordinator": {
     "Profile": "CordinatorProfile"
+  },
+  "TeamMember": {
+    "Profile": "TeamMemberProfile"
   }
 }

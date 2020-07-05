@@ -16,15 +16,12 @@ const {
 class CordinatorService {
 /**
      * Creates a new cordinator
-     * @param {string} header header of the cordinator
-     * @param {string} subHeader subHeader of the cordinator
-     * @param {string} introduction introductionof the cordinator
-     * @param {string} objective objective of the cordinator
-     * @param {string} process process of the cordinator
-     * @param {File} introductionImage introductionImage of the cordinator
-     * @param {File} objectiveImage objectiveImage of the cordinator
-     * @param {File} processImage processImage of the cordinator
-     * @returns {string} pillerId pillerId of the cordinator
+     * @param {string} name name of the cordinator
+     * @param {string} university university of the cordinator
+     * @param {string} description desctiption of the cordinator
+     * @param {boolean} alumni type of the cordinator
+     * @param {File} profileImage profileImage of the cordinator
+     * @returns {string} projectId projectId of the cordinator
   */
   static async CreateCordinator({
     name,
@@ -120,6 +117,12 @@ class CordinatorService {
   /**
      * Updates an existing cordinator
      * @param {string} id id of the cordinator
+     * @param {string} name name of the cordinator
+     * @param {string} university university of the cordinator
+     * @param {string} description desctiption of the cordinator
+     * @param {boolean} alumni type of the cordinator
+     * @param {File} profileImage profileImage of the cordinator
+     * @returns {string} projectId projectId of the cordinator
   */
   static async UpdateCordinator({
     id,
@@ -165,7 +168,7 @@ class CordinatorService {
     try {
       await cordinator.save();
     } catch (error) {
-      logger.error('Error while inserting data');
+      logger.error(`Error while inserting data. ${error}`);
       throw new Errors.InternalServerError('Error while inserting data');
     }
 

@@ -3,7 +3,7 @@ const logger = require('./logger');
 const config = require('../config');
 
 const env = config.env || 'development';
-const databaseConfig = require('../config/database.json')[env];
+const databaseConfig = require('../config/database')[env];
 
 const self = module.exports;
 let sequelize;
