@@ -22,6 +22,7 @@ const configurations = {
     organization_email: process.env.ORGANIZATION_EMAIL || 'sasnakasansadasystem@gmail.com',
   },
   cloudinary: {
+    cdn_upload: (process.env.CDN_UPLOAD !== 'false'),
     name: process.env.CLOUDINARY_NAME || 'sasnaka-sansada',
     api_key: process.env.CLOUDINARY_API_KEY || '',
     secret: process.env.CLOUDINARY_SECRET || '',

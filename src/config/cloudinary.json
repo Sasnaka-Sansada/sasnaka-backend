@@ -9,5 +9,10 @@
   },
   "TeamMember": {
     "Profile": "TeamMemberProfile"
+  },
+  "Notification": {
+    "Portrait": "NotificationPortrait",
+    "Banner": "NotificationBanner",
+    "Document": "NotificationDocument"
   }
 }

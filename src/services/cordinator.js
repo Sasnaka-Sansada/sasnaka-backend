@@ -1,7 +1,7 @@
 const { getDatabase } = require('../helpers/get_database');
 const Errors = require('../helpers/errors');
 const logger = require('../helpers/logger');
-const { imageUpload } = require('../helpers/image_handler');
+const { fileUpload } = require('../helpers/file_upload_handler');
 const cloudinaryDir = require('../config/cloudinary.json');
 const {
   formatResponse, convertToTitleCase, groupByKey, changeObjectLabel,
@@ -44,7 +44,7 @@ class CordinatorService {
     const universityTitlecase = convertToTitleCase(university);
 
     // upload the file and get the url
-    const profileImageUrl = await imageUpload({
+    const profileImageUrl = await fileUpload({
       file: profileImage, folder: cloudinaryDir.Cordinator.Profile,
     });
 
@@ -145,7 +145,7 @@ class CordinatorService {
     const universityTitlecase = convertToTitleCase(university);
 
     // upload the file and get the url
-    const profileImageUrl = await imageUpload({
+    const profileImageUrl = await fileUpload({
       file: profileImage, folder: cloudinaryDir.Cordinator.Profile,
     });
 

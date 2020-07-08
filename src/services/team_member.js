@@ -1,7 +1,7 @@
 const { getDatabase } = require('../helpers/get_database');
 const Errors = require('../helpers/errors');
 const logger = require('../helpers/logger');
-const { imageUpload } = require('../helpers/image_handler');
+const { fileUpload } = require('../helpers/file_upload_handler');
 const cloudinaryDir = require('../config/cloudinary.json');
 const {
   formatResponse, convertToTitleCase,
@@ -42,7 +42,7 @@ class TeamMemberService {
     const nameTitlecase = convertToTitleCase(name);
 
     // upload the profileImage file and get the url
-    const profileImageUrl = await imageUpload({
+    const profileImageUrl = await fileUpload({
       file: profileImage, folder: cloudinaryDir.TeamMember.Profile,
     });
 
@@ -121,7 +121,7 @@ class TeamMemberService {
     const nameTitlecase = convertToTitleCase(name);
 
     // upload the file and get the url
-    const profileImageUrl = await imageUpload({
+    const profileImageUrl = await fileUpload({
       file: profileImage, folder: cloudinaryDir.TeamMember.Profile,
     });
 

@@ -2,7 +2,7 @@ const { Op } = require('sequelize');
 const { getDatabase } = require('../helpers/get_database');
 const Errors = require('../helpers/errors');
 const logger = require('../helpers/logger');
-const { imageUpload } = require('../helpers/image_handler');
+const { fileUpload } = require('../helpers/file_upload_handler');
 const cloudinaryDir = require('../config/cloudinary.json');
 const { groupByKey, convertToTitleCase, formatResponse } = require('../helpers/minihelpers');
 
@@ -46,13 +46,13 @@ class ProjectService {
     }
 
     // upload the file and get the url
-    const introductionImageUrl = await imageUpload({
+    const introductionImageUrl = await fileUpload({
       file: introductionImage, folder: cloudinaryDir.Project.ProjectIntroduction,
     });
-    const objectiveImageUrl = await imageUpload({
+    const objectiveImageUrl = await fileUpload({
       file: objectiveImage, folder: cloudinaryDir.Project.ProjectObjective,
     });
-    const processImageUrl = await imageUpload({
+    const processImageUrl = await fileUpload({
       file: processImage, folder: cloudinaryDir.Project.ProjectProcess,
     });
 
@@ -125,6 +125,15 @@ class ProjectService {
   /**
      * Updates an existing project
      * @param {string} id id of the project
+     * @param {String} header of the project
+     * @param {String} subHeader of the project
+     * @param {String} introduction of the project
+     * @param {String} objective of the project
+     * @param {String} process of the project
+     * @param {File} introductionImage of the project
+     * @param {File} objectiveImage of the project
+     * @param {File} processImage of the project
+     * @param {String} pillerId of the project
   */
   static async UpdateProject({
     id,
@@ -154,13 +163,13 @@ class ProjectService {
     }
 
     // upload the file and get the url
-    const introductionImageUrl = await imageUpload({
+    const introductionImageUrl = await fileUpload({
       file: introductionImage, folder: cloudinaryDir.Project.ProjectIntroduction,
     });
-    const objectiveImageUrl = await imageUpload({
+    const objectiveImageUrl = await fileUpload({
       file: objectiveImage, folder: cloudinaryDir.Project.ProjectObjective,
     });
-    const processImageUrl = await imageUpload({
+    const processImageUrl = await fileUpload({
       file: processImage, folder: cloudinaryDir.Project.ProjectProcess,
     });
 

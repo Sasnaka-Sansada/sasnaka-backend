@@ -1,7 +1,5 @@
-const { Pillers } = require('./pillar');
-
 module.exports = (sequelize, Sequelize) => {
-  const Project = sequelize.define('Project', {
+  const Notification = sequelize.define('Notification', {
     id: {
       type: Sequelize.UUID,
       primaryKey: true,
@@ -10,36 +8,20 @@ module.exports = (sequelize, Sequelize) => {
     header: {
       type: Sequelize.STRING,
       allowNull: false,
-      unique: true,
     },
     subHeader: Sequelize.STRING,
-    introduction: {
+    description: {
       type: Sequelize.TEXT,
       allowNull: false,
     },
-    objective: {
-      type: Sequelize.TEXT,
-      allowNull: false,
-    },
-    process: {
-      type: Sequelize.TEXT,
-      allowNull: false,
-    },
-    introductionImage: {
+    subDescription: Sequelize.TEXT,
+    bannerImage: {
       type: Sequelize.STRING(1023),
       allowNull: false,
     },
-    objectiveImage: {
+    portraitImage: {
       type: Sequelize.STRING(1023),
       allowNull: false,
-    },
-    processImage: {
-      type: Sequelize.STRING(1023),
-      allowNull: false,
-    },
-    pillerId: {
-      type: Sequelize.ENUM(Pillers),
-
     },
     createdAt: {
       type: Sequelize.DATE,
@@ -50,7 +32,10 @@ module.exports = (sequelize, Sequelize) => {
   });
 
   // eslint-disable-next-line no-unused-vars
-  Project.associate = (models) => {
+  Notification.associate = (models) => {
+    models.Notification.hasMany(models.Attatchment, {
+      onDelete: 'cascade', hooks: true, foreignKey: 'notificationId',
+    });
   };
-  return Project;
+  return Notification;
 };

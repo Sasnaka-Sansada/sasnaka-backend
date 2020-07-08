@@ -2,7 +2,7 @@ const CordinatorService = require('../services/cordinator');
 const {
   CreateCordinator, CordinatorId, UpdateCordinator,
 } = require('../validators/cordinator');
-const { ImageValidator } = require('../validators/image_validator');
+const { FileValidator } = require('../validators/file_validator');
 
 /**
  * Controller which manages cordinators
@@ -21,8 +21,8 @@ class CordinatorController {
     try {
       const { value, error } = CreateCordinator.validate(req.body);
       if (error) throw (error);
-      const { imageError, images } = ImageValidator(req.files, ['profileImage']);
-      if (imageError) throw imageError;
+      const { fileError, images } = FileValidator(req.files, ['profileImage'], []);
+      if (fileError) throw fileError;
       const cordinator = await CordinatorService.CreateCordinator({ ...value, ...images });
       res.send(cordinator).status(200);
     } catch (err) {
@@ -77,8 +77,8 @@ class CordinatorController {
     try {
       const { value, error } = UpdateCordinator.validate({ id: req.params.id, ...req.body });
       if (error) throw (error);
-      const { imageError, images } = ImageValidator(req.files, ['profileImage']);
-      if (imageError) throw imageError;
+      const { fileError, images } = FileValidator(req.files, ['profileImage'], []);
+      if (fileError) throw fileError;
       const cordinator = await CordinatorService.UpdateCordinator({ ...value, ...images });
       res.send(cordinator).status(200);
     } catch (err) {

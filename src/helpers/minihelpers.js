@@ -84,6 +84,14 @@ const changeObjectLabel = (oldLabel, newLabel, object) => {
   return object;
 };
 
+/**
+ * Returns true if second parameter is a subset of the first parameter
+ * @param {String[]} set
+ * @param {String} subset
+ * #returns boolean is subset
+ */
+const isSubset = (set, subset) => subset.every((subItem) => set.some((item) => item === subItem));
+
 module.exports = {
-  groupByKey, convertToTitleCase, compareTwoArrays, formatResponse, changeObjectLabel,
+  groupByKey, convertToTitleCase, compareTwoArrays, formatResponse, changeObjectLabel, isSubset,
 };
