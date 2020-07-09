@@ -106,9 +106,7 @@ class NotificationService {
     }
 
     try {
-      await database.sequelize.transaction(async (t) => {
-        await notification.destroy({ transaction: t });
-      });
+      await notification.destroy();
     } catch (error) {
       logger.error(`Error while deleting data: ${error}`);
       throw new Errors.InternalServerError('Error while deleting data');

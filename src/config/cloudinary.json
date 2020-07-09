@@ -14,5 +14,10 @@
     "Portrait": "NotificationPortrait",
     "Banner": "NotificationBanner",
     "Document": "NotificationDocument"
+  },
+  "Event":{
+    "Content":"EventContent",
+    "Thumbnail":"EventThumbnail",
+    "SubImage":"EventSubImage"
   }
 }

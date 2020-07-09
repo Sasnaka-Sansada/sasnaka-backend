@@ -73,7 +73,15 @@ const FileValidator = (fileArray, requiredImages, requiredDocs) => {
     return { fileError, images: null, docs: null };
   }
 
-  const images = imageArray.reduce((obj, image) => ({ ...obj, [image.fieldname]: image }), {});
+  const images = imageArray.reduce((obj, image) => {
+    if ([image.fieldname] in obj) {
+      if (Array.isArray(obj[image.fieldname])) {
+        return { ...obj, [image.fieldname]: [...obj[image.fieldname], image] };
+      }
+      return { ...obj, [image.fieldname]: [obj[image.fieldname], image] };
+    }
+    return { ...obj, [image.fieldname]: image };
+  }, {});
   const docs = docArray.map((doc) => ({ name: doc.originalname, doc }));
 
   return { fileError: null, images, docs };

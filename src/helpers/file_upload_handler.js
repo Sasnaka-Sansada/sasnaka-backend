@@ -25,7 +25,7 @@ const cdnUpload = async ({ file, folder }) => {
         // ],
       });
   } catch (error) {
-    logger.error(`Error while uploading file: ${error}`);
+    logger.error(`Error while uploading file: ${error.message}`);
   }
   return fileData.secure_url;
 };

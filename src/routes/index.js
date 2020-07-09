@@ -4,6 +4,9 @@ const projectRoutes = require('./project');
 const cordinatorRoutes = require('./cordinator');
 const teamMemberRoutes = require('./team_member');
 const notificationRoutes = require('./notification');
+const eventRoutes = require('./event');
+const volunteerRoutes = require('./volunteer');
+const feedbackRoutes = require('./feedback');
 
 // routes dividing into subroutes
 const endPointsHandler = (app) => {
@@ -13,6 +16,9 @@ const endPointsHandler = (app) => {
   app.use('/api/cordinator', cordinatorRoutes);
   app.use('/api/team', teamMemberRoutes);
   app.use('/api/notification', notificationRoutes);
+  app.use('/api/event', eventRoutes);
+  app.use('/api/volunteer', volunteerRoutes);
+  app.use('/api/feedback', feedbackRoutes);
 };
 
 module.exports = { endPointsHandler };

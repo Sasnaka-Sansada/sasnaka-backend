@@ -5,6 +5,8 @@
 - Deploy as soon as possible( Find the deploying platform first- Heroku??)
 - Check and fix npm vulnarabilities
 - turn image transformations on once deployed and hosted
+- role based access setting
+- field validation discuss and finalize
 
 ## done
 - Project update

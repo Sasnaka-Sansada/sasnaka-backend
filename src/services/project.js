@@ -196,7 +196,7 @@ class ProjectService {
   }
 
   /**
-     * Returns all projects of a given piller
+     * Returns all projects of all pillers
      * @returns {Project}[] array of all projects grouped into pillers
   */
   static async ListProjects() {
@@ -219,7 +219,7 @@ class ProjectService {
   static async ListProjectsOfAPiller({ pillerId }) {
     const database = await getDatabase();
 
-    let projects = await database.Project.findAll({ where: { pillerId } }, { order: [['createdAt', 'DESC']] });
+    let projects = await database.Project.findAll({ where: { pillerId }, order: [['createdAt', 'DESC']] });
 
     // remove timestamp attributes
     projects = projects.map((project) => formatResponse(project));

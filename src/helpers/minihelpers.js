@@ -35,7 +35,9 @@ const convertToTitleCase = (text) => {
   const articles = ['a', 'an', 'the', 'of', 'in', 'for', 'on'];
   const words = text.trim().split(' ');
   return words.reduce((all, current, index) => {
-    if (index !== 0 && articles.includes(current.toLowerCase())) {
+    if (current.toUpperCase() === current) {
+      all += current;
+    } else if (index !== 0 && articles.includes(current.toLowerCase())) {
       all += `${current.toLowerCase()}`;
     } else {
       all += `${current.charAt(0).toUpperCase() + current.slice(1).toLowerCase()}`;
