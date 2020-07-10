@@ -5,7 +5,7 @@ const databaseConnection = {
     username: process.env.DEV_USER || 'postgres',
     password: process.env.DEV_PWD || 'newuser',
     database: process.env.DEV_DB || 'sasnaka',
-    host: process.env.DEV_HOST || '127.0.0.1',
+    host: process.env.DEV_HOST || 'db',
     dialect: 'postgres',
     operatorsAliases: '0',
   },

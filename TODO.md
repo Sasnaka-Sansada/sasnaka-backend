@@ -7,6 +7,7 @@
 - turn image transformations on once deployed and hosted
 - role based access setting
 - field validation discuss and finalize
+- Build local file saving as well
 
 ## done
 - Project update
@@ -25,3 +26,21 @@
 - Email- sendgrid - 100 mails per day
 - Images - cloudinary ~ 200 image uploads per day(with transformations)
 
+## docker commands
+- to rebuild the server image
+	```bash
+	docker build -t sasnaka-sansada .
+	```
+- to run the db and server together(uncommenting the last line of the dockerfile)
+  ```bash
+	docker-compose up
+	```
+- to run db and server interactively
+ ```bash
+	docker-compose run --service-ports db -d
+  docker-compose run --service-ports sasnaka-backend
+	```
+- to exit containers
+```bash
+	docker-compose down
+	```
