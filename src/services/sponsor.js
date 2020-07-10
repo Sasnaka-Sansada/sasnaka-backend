@@ -11,31 +11,23 @@ class SponsorService {
   /**
        * Creates a new sponsor
        * @param {String} name name of the sponsor
-       * @param {String} birthday birthday of the sponsor
        * @param {String} email email of the sponsor
-       * @param {Number} telNumber telephone number of the sponsor
+       * @param {Number} contactNumber contact number of the sponsor
        * @param {String} address address of the sponsor
-       * @param {String} potentials potentials of the sponsor
-       * @param {String} interested interests of the sponsor
-       * @param {String} comments comments of the sponsor
+       * @param {String} comment comments of the sponsor
        * @returns {Object} Sponsor
     */
   static async CreateSponsor({
     name,
-    birthday,
     email,
-    telNumber,
+    contactNumber,
     address,
-    potentials,
-    interested,
-    comments,
+    comment,
   }) {
     const database = await getDatabase();
 
     // make titlecase
     const nameTitlecase = convertToTitleCase(name);
-
-    const birthdayObject = new Date(birthday);
 
     let sponsor;
 
@@ -43,13 +35,10 @@ class SponsorService {
       // create sponsor
       sponsor = await database.Sponsor.create({
         name: nameTitlecase,
-        birthday: birthdayObject,
         email,
-        telNumber,
+        contactNumber,
         address,
-        potentials,
-        interested,
-        comments,
+        comment,
       });
     } catch (error) {
       logger.error(`Error while inserting data: ${error}`);
@@ -63,8 +52,8 @@ class SponsorService {
   }
 
   /**
-     * Returns all sponsors of a given piller
-     * @returns {Sponsor}[] array of all sponsors grouped into pillers
+     * Returns all sponsors
+     * @returns {Sponsor}[] array of all sponsors
   */
   static async ListSponsors() {
     const database = await getDatabase();

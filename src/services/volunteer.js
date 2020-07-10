@@ -13,22 +13,22 @@ class VolunteerService {
        * @param {String} name name of the volunteer
        * @param {String} birthday birthday of the volunteer
        * @param {String} email email of the volunteer
-       * @param {Number} telNumber telephone number of the volunteer
+       * @param {Number} contactNumber telephone number of the volunteer
        * @param {String} address address of the volunteer
        * @param {String} potentials potentials of the volunteer
        * @param {String} interested interests of the volunteer
-       * @param {String} comments comments of the volunteer
+       * @param {String} comment comment of the volunteer
        * @returns {Object} Volunteer
     */
   static async CreateVolunteer({
     name,
     birthday,
     email,
-    telNumber,
+    contactNumber,
     address,
     potentials,
     interested,
-    comments,
+    comment,
   }) {
     const database = await getDatabase();
 
@@ -45,11 +45,11 @@ class VolunteerService {
         name: nameTitlecase,
         birthday: birthdayObject,
         email,
-        telNumber,
+        contactNumber,
         address,
         potentials,
         interested,
-        comments,
+        comment,
       });
     } catch (error) {
       logger.error(`Error while inserting data: ${error}`);

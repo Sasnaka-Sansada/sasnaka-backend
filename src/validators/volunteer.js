@@ -4,12 +4,12 @@ const CreateVolunteer = Joi.object().keys({
   name: Joi.string().max(255).required(),
   birthday: Joi.date().required(),
   email: Joi.string().email().max(1023).required(),
-  telNumber: Joi.number().integer().min(1).max(10 ** 15)
+  contactNumber: Joi.number().integer().min(1).max(10 ** 15)
     .required(),
   address: Joi.string().allow(null, '').required(),
   potentials: Joi.string().allow(null, '').required(),
   interested: Joi.string().allow(null, '').required(),
-  comments: Joi.string().allow(null, '').required(),
+  comment: Joi.string().allow(null, '').required(),
 });
 
 

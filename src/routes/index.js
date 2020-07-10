@@ -7,6 +7,8 @@ const notificationRoutes = require('./notification');
 const eventRoutes = require('./event');
 const volunteerRoutes = require('./volunteer');
 const feedbackRoutes = require('./feedback');
+const sponsorRoutes = require('./sponsor');
+const resourcePersonRoutes = require('./resource_person');
 
 // routes dividing into subroutes
 const endPointsHandler = (app) => {
@@ -19,6 +21,8 @@ const endPointsHandler = (app) => {
   app.use('/api/event', eventRoutes);
   app.use('/api/volunteer', volunteerRoutes);
   app.use('/api/feedback', feedbackRoutes);
+  app.use('/api/sponsor', sponsorRoutes);
+  app.use('/api/resource', resourcePersonRoutes);
 };
 
 module.exports = { endPointsHandler };

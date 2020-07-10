@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const Volunteer = sequelize.define('Volunteer', {
+  const ResourcePerson = sequelize.define('ResourcePerson', {
     id: {
       type: Sequelize.UUID,
       primaryKey: true,
@@ -7,10 +7,6 @@ module.exports = (sequelize, Sequelize) => {
     },
     name: {
       type: Sequelize.STRING,
-      allowNull: false,
-    },
-    birthday: {
-      type: Sequelize.DATE,
       allowNull: false,
     },
     email: {
@@ -21,9 +17,11 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false,
     },
+    type: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
     address: Sequelize.TEXT,
-    potentials: Sequelize.TEXT,
-    interested: Sequelize.TEXT,
     comment: Sequelize.TEXT,
     createdAt: {
       type: Sequelize.DATE,
@@ -34,7 +32,7 @@ module.exports = (sequelize, Sequelize) => {
   });
 
   // eslint-disable-next-line no-unused-vars
-  Volunteer.associate = (models) => {
+  ResourcePerson.associate = (models) => {
   };
-  return Volunteer;
+  return ResourcePerson;
 };
