@@ -1,10 +1,12 @@
 
 const Administrator = 'ADMINISTRATOR';
-const EditorLevel1 = 'EDITOR_LEVEL1';
-const EditorLevel2 = 'EDITOR_LEVEL2';
-const EditorLevel3 = 'EDITOR_LEVEL3';
-const Roles = [Administrator, EditorLevel1, EditorLevel2, EditorLevel3];
+const EditorLevelA = 'EDITOR_LEVELA';
+const EditorLevelB = 'EDITOR_LEVELB';
+const EditorLevelC = 'EDITOR_LEVELC';
+const EditorLevelD = 'EDITOR_LEVELD';
+
+const Roles = [Administrator, EditorLevelA, EditorLevelB, EditorLevelC, EditorLevelD];
 
 module.exports = {
-  Administrator, EditorLevel1, EditorLevel2, EditorLevel3, Roles,
+  Administrator, EditorLevelA, EditorLevelB, EditorLevelC, EditorLevelD, Roles,
 };

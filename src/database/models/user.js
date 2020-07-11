@@ -28,6 +28,14 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.ENUM(Roles),
       allowNull: false,
     },
+    sponsorEmail: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
+    },
+    resourcePersonEmail: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
+    },
     createdAt: {
       type: Sequelize.DATE,
     },

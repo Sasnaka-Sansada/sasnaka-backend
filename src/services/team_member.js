@@ -7,7 +7,6 @@ const {
   formatResponse, convertToTitleCase,
 } = require('../helpers/minihelpers');
 
-
 /**
  * Service that manages team_member functionalities
  * @abstract
@@ -23,7 +22,7 @@ class TeamMemberService {
      * @param {string} linkedin linkedIn url of the team member
      * @param {string} facebook facebook url of the team member
      * @param {string} twitter twitter url of the team member
-     * @param {File}
+     * @param {File} profileImage profile image of the team member
      * @returns {string}
   */
   static async CreateTeamMember({

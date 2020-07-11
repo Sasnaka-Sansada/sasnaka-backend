@@ -1,7 +1,10 @@
+const { Op } = require('sequelize');
 const { getDatabase } = require('../helpers/get_database');
 const Errors = require('../helpers/errors');
 const logger = require('../helpers/logger');
 const { hashPassword } = require('../helpers/password');
+const { formatResponse } = require('../helpers/minihelpers');
+const { Administrator, EditorLevelA, EditorLevelD } = require('../database/models/role');
 
 /**
  * Service that manages user functionalities
@@ -54,6 +57,31 @@ class UserService {
       logger.error('Error while inserting data');
       throw new Errors.InternalServerError('Error while inserting data');
     }
+  }
+
+  /**
+     * Returns all users with email recieving capability
+     * @returns {User}[] Users
+  */
+  static async ListEmailSharableUsers() {
+    const database = await getDatabase();
+
+    const result = await database.User.findAll({
+      attributes: ['id', 'email', 'firstName', 'lastName', 'roleId'],
+      where: {
+        [Op.or]: [
+          { roleId: Administrator },
+          { roleId: EditorLevelA },
+          { roleId: EditorLevelD },
+        ],
+      },
+      order: [['createdAt', 'DESC']],
+    });
+
+    // remove timestamp attributes
+    const users = result.map((user) => formatResponse(user));
+
+    return users;
   }
 }
 module.exports = UserService;

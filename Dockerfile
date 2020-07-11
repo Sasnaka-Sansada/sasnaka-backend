@@ -18,4 +18,4 @@ EXPOSE ${PORT}
 
 ENTRYPOINT /bin/bash
 
-# CMD [ "npm","run","dev"]
+# CMD [ "npm","run","start"]
