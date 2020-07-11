@@ -18,7 +18,7 @@ const cdnUpload = async ({ file, folder }) => {
     fileData = await cloudinary.uploader.upload(dataUri(file),
       {
         folder,
-        // format: 'png',
+        // format: 'jpg',
         // transformation: [
         //   { width: 1920, crop: 'limit' },
         //   { quality: 'auto' },

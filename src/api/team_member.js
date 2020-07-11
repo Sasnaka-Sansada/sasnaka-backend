@@ -21,7 +21,7 @@ class TeamMemberController {
     try {
       const { value, error } = CreateTeamMember.validate(req.body);
       if (error) throw (error);
-      const { fileError, images } = FileValidator(req.files, ['profileImage'], []);
+      const { fileError, images } = FileValidator(req.files, ['profileImage'], [], []);
       if (fileError) throw fileError;
       const teamMember = await TeamMemberService.CreateTeamMember({ ...value, ...images });
       res.send(teamMember).status(200);
@@ -75,7 +75,7 @@ class TeamMemberController {
     try {
       const { value, error } = UpdateTeamMember.validate({ id: req.params.id, ...req.body });
       if (error) throw (error);
-      const { fileError, images } = FileValidator(req.files, ['profileImage'], []);
+      const { fileError, images } = FileValidator(req.files, ['profileImage'], [], []);
       if (fileError) throw fileError;
       const teamMember = await TeamMemberService.UpdateTeamMember({ ...value, ...images });
       res.send(teamMember).status(200);

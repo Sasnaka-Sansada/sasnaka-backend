@@ -21,7 +21,7 @@ class NotificationController {
     try {
       const { value, error } = CreateNotification.validate(req.body);
       if (error) throw (error);
-      const { fileError, images, docs } = FileValidator(req.files, ['bannerImage', 'portraitImage'], ['attatchments']);
+      const { fileError, images, docs } = FileValidator(req.files, ['bannerImage', 'portraitImage'], [], ['attatchments']);
       if (fileError) throw fileError;
       const notification = await NotificationService.CreateNotification(
         { ...value, ...images, docs },
@@ -79,7 +79,7 @@ class NotificationController {
     try {
       const { value, error } = UpdateNotification.validate({ ...req.body, id: req.params.id });
       if (error) throw (error);
-      const { fileError, images, docs } = FileValidator(req.files, ['bannerImage', 'portraitImage'], ['attatchments']);
+      const { fileError, images, docs } = FileValidator(req.files, ['bannerImage', 'portraitImage'], [], ['attatchments']);
       if (fileError) throw fileError;
       const notification = await NotificationService.UpdateNotification(
         { ...value, ...images, docs },

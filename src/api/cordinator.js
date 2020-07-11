@@ -21,7 +21,7 @@ class CordinatorController {
     try {
       const { value, error } = CreateCordinator.validate(req.body);
       if (error) throw (error);
-      const { fileError, images } = FileValidator(req.files, ['profileImage'], []);
+      const { fileError, images } = FileValidator(req.files, ['profileImage'], [], []);
       if (fileError) throw fileError;
       const cordinator = await CordinatorService.CreateCordinator({ ...value, ...images });
       res.send(cordinator).status(200);
@@ -77,7 +77,7 @@ class CordinatorController {
     try {
       const { value, error } = UpdateCordinator.validate({ id: req.params.id, ...req.body });
       if (error) throw (error);
-      const { fileError, images } = FileValidator(req.files, ['profileImage'], []);
+      const { fileError, images } = FileValidator(req.files, ['profileImage'], [], []);
       if (fileError) throw fileError;
       const cordinator = await CordinatorService.UpdateCordinator({ ...value, ...images });
       res.send(cordinator).status(200);

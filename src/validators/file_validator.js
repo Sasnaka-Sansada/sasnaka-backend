@@ -28,7 +28,15 @@ const validateType = (
   },
 );
 
-const FileValidator = (fileArray, requiredImages, requiredDocs) => {
+/**
+ * Takes an array of files and validates the mimetype, file header
+ * and formats into a feedable object to the service layer
+ * @param {*} fileArray array of files
+ * @param {*} requiredImages required single images
+ * @param {*} requiredImageArrays required imager arrays
+ * @param {*} requiredDocArrays required document(attatchment) arrays
+ */
+const FileValidator = (fileArray, requiredImages, requiredImageArrays, requiredDocArrays) => {
   const imageBufferHeaders = [
     {
       prefix: [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a],
@@ -57,11 +65,11 @@ const FileValidator = (fileArray, requiredImages, requiredDocs) => {
   const docArray = [];
 
   const errorItem = fileArray.find((file) => {
-    if (requiredImages.includes(file.fieldname)
+    if ([...requiredImages, ...requiredImageArrays].includes(file.fieldname)
     && validateType(imageBufferHeaders, file.buffer, file.mimetype)) {
       imageArray.push(file);
       return false;
-    } if (requiredDocs.includes(file.fieldname)
+    } if (requiredDocArrays.includes(file.fieldname)
     && validateType(docBufferHeaders, file.buffer, file.mimetype)) {
       docArray.push(file);
       return false;
@@ -73,6 +81,8 @@ const FileValidator = (fileArray, requiredImages, requiredDocs) => {
     return { fileError, images: null, docs: null };
   }
 
+  const initialObject = requiredImageArrays.reduce((obj, name) => ({ ...obj, [name]: [] }), {});
+
   const images = imageArray.reduce((obj, image) => {
     if ([image.fieldname] in obj) {
       if (Array.isArray(obj[image.fieldname])) {
@@ -81,7 +91,8 @@ const FileValidator = (fileArray, requiredImages, requiredDocs) => {
       return { ...obj, [image.fieldname]: [obj[image.fieldname], image] };
     }
     return { ...obj, [image.fieldname]: image };
-  }, {});
+  }, initialObject);
+
   const docs = docArray.map((doc) => ({ name: doc.originalname, doc }));
 
   return { fileError: null, images, docs };

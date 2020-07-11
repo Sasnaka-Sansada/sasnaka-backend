@@ -22,7 +22,7 @@ class ProjectController {
       const { value, error } = CreateProject.validate(req.body);
       if (error) throw (error);
       const { fileError, images } = FileValidator(req.files,
-        ['introductionImage', 'objectiveImage', 'processImage'], []);
+        ['introductionImage', 'objectiveImage', 'processImage'], [], []);
       if (fileError) throw fileError;
       const project = await ProjectService.CreateProject({ ...value, ...images });
       res.send(project).status(200);
@@ -78,7 +78,7 @@ class ProjectController {
     try {
       const { value, error } = UpdateProject.validate({ id: req.params.id, ...req.body });
       if (error) throw (error);
-      const { fileError, images } = FileValidator(req.files, ['introductionImage', 'objectiveImage', 'processImage'], []);
+      const { fileError, images } = FileValidator(req.files, ['introductionImage', 'objectiveImage', 'processImage'], [], []);
       if (fileError) throw fileError;
       const project = await ProjectService.UpdateProject({ ...value, ...images });
       res.send(project).status(200);

@@ -8,7 +8,7 @@ const CreateEvent = Joi.object().keys({
   thumbnailDescription: Joi.string().max(255).required().allow(null, ''),
   thumbnailTitle: Joi.string().max(255).required(),
   date: Joi.date().required(),
-  projectId: Joi.string().required(),
+  projectId: Joi.string().uuid().required(),
 });
 
 const UpdateEvent = Joi.object().keys({
@@ -20,7 +20,7 @@ const UpdateEvent = Joi.object().keys({
   thumbnailDescription: Joi.string().max(255).required().allow(null, ''),
   thumbnailTitle: Joi.string().max(255).required(),
   date: Joi.date().required(),
-  projectId: Joi.string().required(),
+  projectId: Joi.string().uuid().required(),
 });
 
 const EventId = Joi.object().keys({

@@ -1,13 +1,17 @@
 ## todo
-- making mail noreply
-- Change email button href in the .env and add twitter link
+0. Complete mail sending after discussing with oshan/ ruchira aiyala
+1. Build local file saving as well
+2. role based access setting
+3. field validation discuss and finalize
+
+4. Deploy as soon as possible( Find the deploying platform first- Heroku??)
+- Check and fix npm vulnarabilities - done but recheck once deployed
+- turn image transformations on and add more optimizations once deployed and hosted
 - Configure sendgrid mail to other mode once deployed?? The maximum limit of sendgrid??
-- Deploy as soon as possible( Find the deploying platform first- Heroku??)
-- Check and fix npm vulnarabilities
-- turn image transformations on once deployed and hosted
-- role based access setting
-- field validation discuss and finalize
-- Build local file saving as well
+
+5. making mail noreply
+6. Change email button href in the .env and add twitter link
+
 
 ## done
 - Project update

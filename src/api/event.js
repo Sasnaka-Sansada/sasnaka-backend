@@ -21,7 +21,7 @@ class EventController {
     try {
       const { value, error } = CreateEvent.validate(req.body);
       if (error) throw (error);
-      const { fileError, images } = FileValidator(req.files, ['contentImage', 'thumbnailImage', 'subImages'], []);
+      const { fileError, images } = FileValidator(req.files, ['contentImage', 'thumbnailImage'], ['subImages'], []);
       if (fileError) throw fileError;
       const event = await EventService.CreateEvent({ ...value, ...images });
       res.send(event).status(200);
@@ -77,7 +77,7 @@ class EventController {
     try {
       const { value, error } = UpdateEvent.validate({ id: req.params.id, ...req.body });
       if (error) throw (error);
-      const { fileError, images } = FileValidator(req.files, ['contentImage', 'thumbnailImage', 'subImages'], []);
+      const { fileError, images } = FileValidator(req.files, ['contentImage', 'thumbnailImage'], ['subImages'], []);
       if (fileError) throw fileError;
       const event = await EventService.UpdateEvent({ ...value, ...images });
       res.send(event).status(200);
