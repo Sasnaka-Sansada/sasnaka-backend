@@ -1,9 +1,13 @@
 const { Op } = require('sequelize');
+const path = require('path');
 const { getDatabase } = require('../helpers/get_database');
 const Errors = require('../helpers/errors');
 const logger = require('../helpers/logger');
 const { convertToTitleCase, formatResponse } = require('../helpers/minihelpers');
 const { Administrator, EditorLevelA, EditorLevelD } = require('../database/models/role');
+const config = require('../config');
+const sendMail = require('../emails/send_mail');
+const { calcCurrentTime } = require('../helpers/local_time');
 
 /**
  * Service that manages resource_person functionalities
@@ -11,6 +15,59 @@ const { Administrator, EditorLevelA, EditorLevelD } = require('../database/model
  * @category Services
  */
 class ResourcePersonService {
+  /**
+   * Helper resource_person mail function
+   * @param {String} recipientEmail,
+   * @param {String} recipientFirstName,
+   * @param {String} recipientLastName,
+   * @param {String} name name of the resource person
+   * @param {String} email email of the resource person
+   * @param {Integer} contactNumber contact no of the resource person
+   * @param {String} resourcePersonAddress
+   * @param {String} resourcePersonComment
+   * @param {String} resourcePersonDate
+   * @param {String} resourcePersonType
+   */
+  static async sendResourceMail({
+    recipientEmail,
+    recipientFirstName,
+    recipientLastName,
+    resourcePersonName,
+    resourcePersonEmail,
+    resourcePersonContactNumber,
+    resourcePersonAddress,
+    resourcePersonComment,
+    resourcePersonDate,
+    resourcePersonType,
+  }) {
+    const emailComposition = {
+      from: config.email.organization_email,
+      to: recipientEmail,
+      subject: 'Resource Person Notification- Sasnaka Sansada',
+      template: 'resource_person_notification',
+      context: {
+        recipientEmail,
+        recipientFirstName,
+        recipientLastName,
+        resourcePersonName,
+        resourcePersonEmail,
+        resourcePersonContactNumber,
+        resourcePersonAddress,
+        resourcePersonComment,
+        resourcePersonDate,
+        resourcePersonType,
+      },
+      attachments: [
+        {
+          filename: 'logo.png',
+          path: path.join(__dirname, '../../public/images/logo.png'),
+          cid: 'sasnakalogo',
+        },
+      ],
+    };
+    await sendMail(emailComposition);
+  }
+
   /**
        * Creates a new resource_person
        * @param {String} name name of the resource person
@@ -45,6 +102,32 @@ class ResourcePersonService {
         address,
         comment,
         type,
+      });
+
+      const date = calcCurrentTime('+5.5').toLocaleString();
+
+      // find users that needed to be notified
+      const notifiedUsers = await database.User.findAll({
+        attributes: ['email', 'firstName', 'lastName'],
+        where: { resourcePersonEmail: true },
+        order: [['createdAt', 'DESC']],
+      });
+
+      // send mail
+      notifiedUsers.forEach(async (user) => {
+        await this.sendResourceMail({
+          recipientEmail: user.email,
+          recipientFirstName: user.firstName,
+          recipientLastName: user.lastName,
+
+          resourcePersonName: nameTitlecase,
+          resourcePersonEmail: email,
+          resourcePersonContactNumber: contactNumber,
+          resourcePersonAddress: address,
+          resourcePersonComment: comment,
+          resourcePersonDate: date,
+          resourcePersonType: type,
+        });
       });
     } catch (error) {
       logger.error(`Error while inserting data: ${error}`);

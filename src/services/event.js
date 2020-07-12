@@ -4,6 +4,7 @@ const logger = require('../helpers/logger');
 const { fileUpload } = require('../helpers/file_upload_handler');
 const cloudinaryDir = require('../config/cloudinary.json');
 const { convertToTitleCase, formatResponse } = require('../helpers/minihelpers');
+const { calcLocalTime, calcCurrentTime } = require('../helpers/local_time');
 
 /**
  * Service that manages event functionalities
@@ -74,7 +75,7 @@ class EventService {
       throw new Errors.InternalServerError('File upload failed');
     }
 
-    const dueDate = new Date(date);
+    const dueDate = calcLocalTime(date, '+5.5');
 
     let event;
 
@@ -211,7 +212,7 @@ class EventService {
       throw new Errors.InternalServerError('File upload failed');
     }
 
-    const dueDate = new Date(date);
+    const dueDate = calcLocalTime(date, '+5.5');
 
     event.headerTitle = headerTitleTitlecase;
     event.headerSinhalaTitle = headerSinhalaTitle;
@@ -309,7 +310,7 @@ class EventService {
       },
     );
 
-    const currentDate = new Date();
+    const currentDate = calcCurrentTime('+5.5');
     let events = result.map((event) => formatResponse(event));
     events = (events.filter((event) => currentDate.getTime() > event.date.getTime())).slice(0, 10);
     return events;
@@ -332,7 +333,8 @@ class EventService {
       },
     );
 
-    const currentDate = new Date();
+    const currentDate = calcCurrentTime('+5.5');
+
     let events = result.map((event) => formatResponse(event));
     events = (events.filter((event) => currentDate.getTime() < event.date.getTime())).slice(0, 10);
     return events;
