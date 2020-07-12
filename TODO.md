@@ -1,5 +1,4 @@
 ## todo
-0. Complete mail sending after discussing with oshan/ ruchira aiyala
 1. Build local file saving as well
 2. role based access setting
 3. field validation discuss and finalize
@@ -8,12 +7,13 @@
 - Check and fix npm vulnarabilities - done but recheck once deployed
 - turn image transformations on and add more optimizations once deployed and hosted
 - Configure sendgrid mail to other mode once deployed?? The maximum limit of sendgrid??
-
+5. Testing
 5. making mail noreply
 6. Change email button href in the .env and add twitter link
 
 
 ## done
+- Complete mail sending after discussing with oshan/ ruchira aiyala
 - Project update
 - Project get
 - Project delete soft delete?

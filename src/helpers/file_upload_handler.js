@@ -1,10 +1,13 @@
 const DatauriParser = require('datauri/parser');
-
+const fs = require('fs');
 const path = require('path');
-
 const cloudinary = require('cloudinary').v2;
+
+const fsPromises = fs.promises;
 const logger = require('./logger');
 const config = require('../config');
+const { generateToken } = require('./generate_token');
+
 
 const dataUri = (file) => {
   const parser = new DatauriParser();
@@ -32,7 +35,16 @@ const cdnUpload = async ({ file, folder }) => {
 
 // need to implement the logic for local storing
 // eslint-disable-next-line no-unused-vars
-const localUpload = async ({ file, folder }) => 'null';
+const localUpload = async ({ file, folder }) => {
+  const filePath = path.join(__dirname, `../../public/uploads/${generateToken(15)}`);
+  try {
+    await fsPromises.writeFile(filePath, dataUri(file));
+  } catch (error) {
+    logger.error(`Error while uploading file: ${error.message}`);
+  }
+
+  return filePath;
+};
 
 const fileUpload = async ({ file, folder }) => {
   if (config.cloudinary.cdn_upload) {
