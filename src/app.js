@@ -25,6 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 const upload = multer();
 app.use(upload.any());
 app.use(express.static('public'));
+app.use(express.static('public/uploads'));
 
 // connecting to the database
 require('./database/models');

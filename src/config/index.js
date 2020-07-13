@@ -11,6 +11,7 @@ if (result.error) {
  * configurations contain all the environment variables in .env
  */
 const configurations = {
+  domain: process.env.HOST_DOMAIN || '127.0.0.1',
   port: process.env.PORT || '8080',
   env: process.env.NODE_ENV || 'development',
   initializeDatabase: (process.env.INITIALIZE === 'true') || false,

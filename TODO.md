@@ -1,5 +1,4 @@
 ## todo
-1. Build local file saving as well
 2. role based access setting
 3. field validation discuss and finalize
 
@@ -10,9 +9,11 @@
 5. Testing
 5. making mail noreply
 6. Change email button href in the .env and add twitter link
-
+7. Change HOST_DOMAIN in the .env to the correct domain for image, pdf static GET url to be correct and
+ remove port number in helpers/file_upload_handler=>function localUpload=> line 55
 
 ## done
+- Build local file saving as well
 - Complete mail sending after discussing with oshan/ ruchira aiyala
 - Project update
 - Project get

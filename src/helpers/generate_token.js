@@ -8,4 +8,6 @@ const cryptoRandomString = require('crypto-random-string');
  */
 const generateToken = (length) => cryptoRandomString({ length, type: 'url-safe' });
 
-module.exports = { generateToken };
+const generateFileName = (length) => cryptoRandomString({ length, type: 'numeric' });
+
+module.exports = { generateToken, generateFileName };

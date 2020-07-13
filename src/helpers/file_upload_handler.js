@@ -6,7 +6,7 @@ const cloudinary = require('cloudinary').v2;
 const fsPromises = fs.promises;
 const logger = require('./logger');
 const config = require('../config');
-const { generateToken } = require('./generate_token');
+const { generateFileName } = require('./generate_token');
 
 
 const dataUri = (file) => {
@@ -33,19 +33,33 @@ const cdnUpload = async ({ file, folder }) => {
   return fileData.secure_url;
 };
 
-// need to implement the logic for local storing
 // eslint-disable-next-line no-unused-vars
 const localUpload = async ({ file, folder }) => {
-  const filePath = path.join(__dirname, `../../public/uploads/${generateToken(15)}`);
+  // path to the subdirectory of the upload directory
+  const folderPath = path.join(__dirname, `../../public/uploads/${folder}`);
+
+  // filename
+  const fileName = `${generateFileName(15)}${path.extname(file.originalname).toString()}`;
+  // complete path to the file
+  const filePath = path.join(`${folderPath}/${fileName}`);
   try {
-    await fsPromises.writeFile(filePath, dataUri(file));
+    // create subdirectory if already not created
+    await fsPromises.mkdir(folderPath, { recursive: true });
+    // save the file
+    await fsPromises.writeFile(filePath, file.buffer);
   } catch (error) {
     logger.error(`Error while uploading file: ${error.message}`);
   }
 
-  return filePath;
+  // return resource static url
+  return `http://${config.domain}:${config.port}/${folder}/${fileName}`;
 };
 
+/**
+ * uploads the file to the local resource directory or CDN
+ * @param {Object} file file needed to be saved
+ * @param {String} name of the subdirectory the file is saved
+ */
 const fileUpload = async ({ file, folder }) => {
   if (config.cloudinary.cdn_upload) {
     return cdnUpload({ file, folder });
