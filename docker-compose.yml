@@ -1,13 +1,27 @@
 version: "3.8"
 services:
   db:
+    container_name: sasnaka-db
     image: postgres
     environment:
+      DATABASE_HOST: 127.0.0.1
       POSTGRES_PASSWORD: ${DEV_PWD}
       POSTGRES_USER: ${DEV_USER}
       POSTGRES_DB: ${DEV_DB}
     volumes:
       - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - "5433:5433"
+  test_db:
+    container_name: sasnaka-testdb
+    image: postgres
+    environment:
+      DATABASE_HOST: 127.0.0.1
+      POSTGRES_PASSWORD: ${TEST_PWD}
+      POSTGRES_USER: ${TEST_USER}
+      POSTGRES_DB: ${TEST_DB}
+    volumes:
+      - ./pgdata_test:/var/lib/postgresql/data
     ports:
       - "5432:5432"
   sasnaka-backend:
@@ -18,7 +32,8 @@ services:
     tty: true        # docker run -t
     restart: on-failure
     depends_on:
-      - db
+      # - db
+      - test_db
     ports:
       - "8000:8000"
     volumes:

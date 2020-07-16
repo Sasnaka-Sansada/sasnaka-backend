@@ -155,7 +155,7 @@ class CordinatorService {
 
     const project = await database.Project.findOne({ where: { id: projectId } });
     if (!project) {
-      throw new Errors.InternalServerError('A project with given project is not available');
+      throw new Errors.BadRequest('A project with given project is not available');
     }
 
     cordinator.name = nameTitlecase;

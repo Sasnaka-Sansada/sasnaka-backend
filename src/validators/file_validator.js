@@ -64,7 +64,7 @@ const FileValidator = (fileArray, requiredImages, requiredImageArrays, requiredD
   const imageArray = [];
   const docArray = [];
 
-  const errorItem = fileArray.find((file) => {
+  let errorItem = fileArray.find((file) => {
     if ([...requiredImages, ...requiredImageArrays].includes(file.fieldname)
     && validateType(imageBufferHeaders, file.buffer, file.mimetype)) {
       imageArray.push(file);
@@ -77,7 +77,18 @@ const FileValidator = (fileArray, requiredImages, requiredImageArrays, requiredD
   });
 
   if (errorItem) {
-    const fileError = new Errors.BadRequest(`File ${errorItem.fieldname} has unacceptable format`);
+    const fileError = new Errors.BadRequest(`File ${errorItem.fieldname} has unacceptable format or is not required`);
+    return { fileError, images: null, docs: null };
+  }
+
+  errorItem = [...requiredImages, ...requiredImageArrays, ...requiredDocArrays].find((name) => {
+    const fileNames = fileArray.map((file) => file.fieldname);
+    if (fileNames.includes(name)) return false;
+    return true;
+  });
+
+  if (errorItem) {
+    const fileError = new Errors.BadRequest(`File ${errorItem} is required`);
     return { fileError, images: null, docs: null };
   }
 

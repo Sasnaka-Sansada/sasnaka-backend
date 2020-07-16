@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon --watch src -L start",
-    "test": "true"
+    "db:migrate": "npx sequelize-cli db:migrate",
+    "test": "cross-env NODE_ENV=test jest --detectOpenHandles --testTimeout=5000",
+    "pretest": "cross-env NODE_ENV=test npm run db:migrate"
   },
   "repository": {
     "type": "git",
@@ -25,11 +27,18 @@
     "url": "https://github.com/Sasnaka-Sansada/sasnaka-backend/issues"
   },
   "homepage": "https://github.com/Sasnaka-Sansada/sasnaka-backend#readme",
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
+  },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
     "@sendgrid/mail": "^7.1.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "child-process-promise": "^2.2.1",
     "cloudinary": "^1.22.0",
     "connect-session-sequelize": "^6.1.1",
     "crypto-random-string": "^3.2.0",
@@ -49,6 +58,7 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
+    "cross-env": "^7.0.2",
     "eslint": "^7.4.0",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-config-airbnb-base": "^14.1.0",
@@ -62,6 +72,7 @@
     "jsdoc": "^3.6.4",
     "nodemon": "^2.0.4",
     "prettier": "^2.0.5",
-    "sequelize-cli": "^5.5.1"
+    "sequelize-cli": "^5.5.1",
+    "supertest": "^4.0.2"
   }
 }
