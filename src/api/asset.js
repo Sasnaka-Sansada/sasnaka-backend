@@ -1,5 +1,6 @@
 const AssetService = require('../services/asset');
-const { FileValidator } = require('../validators/file_validator');
+const { ImageValidator, DocumentValidator } = require('../validators/file_validator');
+const Errors = require('../helpers/errors');
 
 /**
  * Controller which manages assets
@@ -16,10 +17,12 @@ class EventController {
    */
   static async PutUploadImage(req, res, next) {
     try {
-      const { fileError, image } = FileValidator(req.files);
-      if (fileError) throw fileError;
-      const imageUrl = await AssetService.UploadImage(image);
-      res.send(imageUrl).status(200);
+      const valid = ImageValidator(req.files);
+      if (!valid) {
+        throw new Errors.BadRequest('Unacceptable image format');
+      }
+      const imageUrls = await AssetService.UploadImage({ images: req.files });
+      res.send(imageUrls).status(200);
     } catch (err) {
       next(err);
     }
@@ -34,10 +37,12 @@ class EventController {
    */
   static async PutUploadDocument(req, res, next) {
     try {
-      const { fileError, document } = FileValidator(req.files);
-      if (fileError) throw fileError;
-      const documentUrl = await AssetService.PutUploadDocument(document);
-      res.send(documentUrl).status(200);
+      const valid = DocumentValidator(req.files);
+      if (!valid) {
+        throw new Errors.BadRequest('Unacceptable document format');
+      }
+      const documentUrls = await AssetService.UploadDocument({ documents: req.files });
+      res.send(documentUrls).status(200);
     } catch (err) {
       next(err);
     }

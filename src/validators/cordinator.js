@@ -5,6 +5,7 @@ const CreateCordinator = Joi.object().keys({
   university: Joi.string().max(255).allow(null, '').required(),
   description: Joi.string().allow(null, '').required(),
   alumni: Joi.bool().required(),
+  profileImage: Joi.string().uri().max(1023).required(),
   projectId: Joi.string().uuid().required(),
 });
 
@@ -14,6 +15,7 @@ const UpdateCordinator = Joi.object().keys({
   university: Joi.string().allow(null, '').required(),
   description: Joi.string().allow(null, '').required(),
   alumni: Joi.bool().required(),
+  profileImage: Joi.string().uri().max(1023).required(),
   projectId: Joi.string().uuid().required(),
 });
 

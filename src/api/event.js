@@ -2,7 +2,6 @@ const EventService = require('../services/event');
 const {
   CreateEvent, EventId, UpdateEvent, ProjectId,
 } = require('../validators/event');
-const { FileValidator } = require('../validators/file_validator');
 
 /**
  * Controller which manages events
@@ -21,9 +20,7 @@ class EventController {
     try {
       const { value, error } = CreateEvent.validate(req.body);
       if (error) throw (error);
-      const { fileError, images } = FileValidator(req.files, ['contentImage', 'thumbnailImage'], ['subImages'], []);
-      if (fileError) throw fileError;
-      const event = await EventService.CreateEvent({ ...value, ...images });
+      const event = await EventService.CreateEvent(value);
       res.send(event).status(200);
     } catch (err) {
       next(err);
@@ -77,9 +74,8 @@ class EventController {
     try {
       const { value, error } = UpdateEvent.validate({ id: req.params.id, ...req.body });
       if (error) throw (error);
-      const { fileError, images } = FileValidator(req.files, ['contentImage', 'thumbnailImage'], ['subImages'], []);
-      if (fileError) throw fileError;
-      const event = await EventService.UpdateEvent({ ...value, ...images });
+
+      const event = await EventService.UpdateEvent(value);
       res.send(event).status(200);
     } catch (err) {
       next(err);

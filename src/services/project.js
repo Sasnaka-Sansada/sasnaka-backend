@@ -2,8 +2,6 @@ const { Op } = require('sequelize');
 const { getDatabase } = require('../helpers/get_database');
 const Errors = require('../helpers/errors');
 const logger = require('../helpers/logger');
-const { fileUpload } = require('../helpers/file_upload_handler');
-const cloudinaryDir = require('../config/cloudinary.json');
 const { groupByKey, convertToTitleCase, formatResponse } = require('../helpers/minihelpers');
 
 /**
@@ -19,9 +17,9 @@ class ProjectService {
      * @param {string} introduction introductionof the project
      * @param {string} objective objective of the project
      * @param {string} process process of the project
-     * @param {File} introductionImage introductionImage of the project
-     * @param {File} objectiveImage objectiveImage of the project
-     * @param {File} processImage processImage of the project
+     * @param {string} introductionImage introductionImage of the project
+     * @param {string} objectiveImage objectiveImage of the project
+     * @param {string} processImage processImage of the project
      * @returns {string} pillerId pillerId of the project
   */
   static async CreateProject({
@@ -45,21 +43,6 @@ class ProjectService {
       throw new Errors.BadRequest('A project with the header already exists');
     }
 
-    // upload the file and get the url
-    const introductionImageUrl = await fileUpload({
-      file: introductionImage, folder: cloudinaryDir.Project.ProjectIntroduction,
-    });
-    const objectiveImageUrl = await fileUpload({
-      file: objectiveImage, folder: cloudinaryDir.Project.ProjectObjective,
-    });
-    const processImageUrl = await fileUpload({
-      file: processImage, folder: cloudinaryDir.Project.ProjectProcess,
-    });
-
-    if (!introductionImageUrl || !objectiveImageUrl || !processImageUrl) {
-      throw new Errors.InternalServerError('Image upload failed');
-    }
-
     let project;
 
     try {
@@ -69,9 +52,9 @@ class ProjectService {
         introduction,
         objective,
         process,
-        introductionImage: introductionImageUrl,
-        objectiveImage: objectiveImageUrl,
-        processImage: processImageUrl,
+        introductionImage,
+        objectiveImage,
+        processImage,
         pillerId,
       });
     } catch (error) {
@@ -130,9 +113,9 @@ class ProjectService {
      * @param {String} introduction of the project
      * @param {String} objective of the project
      * @param {String} process of the project
-     * @param {File} introductionImage of the project
-     * @param {File} objectiveImage of the project
-     * @param {File} processImage of the project
+     * @param {string} introductionImage of the project
+     * @param {string} objectiveImage of the project
+     * @param {string} processImage of the project
      * @param {String} pillerId of the project
   */
   static async UpdateProject({
@@ -162,25 +145,14 @@ class ProjectService {
       throw new Errors.BadRequest('A project with the given header already exists');
     }
 
-    // upload the file and get the url
-    const introductionImageUrl = await fileUpload({
-      file: introductionImage, folder: cloudinaryDir.Project.ProjectIntroduction,
-    });
-    const objectiveImageUrl = await fileUpload({
-      file: objectiveImage, folder: cloudinaryDir.Project.ProjectObjective,
-    });
-    const processImageUrl = await fileUpload({
-      file: processImage, folder: cloudinaryDir.Project.ProjectProcess,
-    });
-
     project.header = headerTitlecase;
     project.subHeader = subHeader;
     project.introduction = introduction;
     project.objective = objective;
     project.process = process;
-    project.introductionImage = introductionImageUrl;
-    project.objectiveImage = objectiveImageUrl;
-    project.processImage = processImageUrl;
+    project.introductionImage = introductionImage;
+    project.objectiveImage = objectiveImage;
+    project.processImage = processImage;
     project.pillerId = pillerId;
 
     try {

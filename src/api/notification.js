@@ -2,7 +2,6 @@ const NotificationService = require('../services/notification');
 const {
   CreateNotification, NotificationId, UpdateNotification,
 } = require('../validators/notification');
-const { FileValidator } = require('../validators/file_validator');
 
 /**
  * Controller which manages notifications
@@ -21,11 +20,7 @@ class NotificationController {
     try {
       const { value, error } = CreateNotification.validate(req.body);
       if (error) throw (error);
-      const { fileError, images, docs } = FileValidator(req.files, ['bannerImage', 'portraitImage'], [], ['attatchments']);
-      if (fileError) throw fileError;
-      const notification = await NotificationService.CreateNotification(
-        { ...value, ...images, docs },
-      );
+      const notification = await NotificationService.CreateNotification(value);
       res.send(notification).status(200);
     } catch (err) {
       next(err);
@@ -79,11 +74,7 @@ class NotificationController {
     try {
       const { value, error } = UpdateNotification.validate({ ...req.body, id: req.params.id });
       if (error) throw (error);
-      const { fileError, images, docs } = FileValidator(req.files, ['bannerImage', 'portraitImage'], [], ['attatchments']);
-      if (fileError) throw fileError;
-      const notification = await NotificationService.UpdateNotification(
-        { ...value, ...images, docs },
-      );
+      const notification = await NotificationService.UpdateNotification(value);
       res.send(notification).status(200);
     } catch (err) {
       next(err);

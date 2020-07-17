@@ -2,7 +2,6 @@ const TeamMemberService = require('../services/team_member');
 const {
   CreateTeamMember, TeamMemberId, UpdateTeamMember,
 } = require('../validators/team_member');
-const { FileValidator } = require('../validators/file_validator');
 
 /**
  * Controller which manages team_members
@@ -21,9 +20,7 @@ class TeamMemberController {
     try {
       const { value, error } = CreateTeamMember.validate(req.body);
       if (error) throw (error);
-      const { fileError, images } = FileValidator(req.files, ['profileImage'], [], []);
-      if (fileError) throw fileError;
-      const teamMember = await TeamMemberService.CreateTeamMember({ ...value, ...images });
+      const teamMember = await TeamMemberService.CreateTeamMember(value);
       res.send(teamMember).status(200);
     } catch (err) {
       next(err);
@@ -75,9 +72,7 @@ class TeamMemberController {
     try {
       const { value, error } = UpdateTeamMember.validate({ id: req.params.id, ...req.body });
       if (error) throw (error);
-      const { fileError, images } = FileValidator(req.files, ['profileImage'], [], []);
-      if (fileError) throw fileError;
-      const teamMember = await TeamMemberService.UpdateTeamMember({ ...value, ...images });
+      const teamMember = await TeamMemberService.UpdateTeamMember(value);
       res.send(teamMember).status(200);
     } catch (err) {
       next(err);

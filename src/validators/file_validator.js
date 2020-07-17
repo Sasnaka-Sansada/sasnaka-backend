@@ -1,5 +1,3 @@
-const Errors = require('../helpers/errors');
-
 const validateType = (
   fileBufferHeaders, fileBuffer, mimetype,
 ) => fileBufferHeaders.some(
@@ -28,85 +26,45 @@ const validateType = (
   },
 );
 
+const imageBufferHeaders = [
+  {
+    prefix: [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a],
+    mimetype: 'image/png',
+  },
+  {
+    prefix: [0xff, 0xd8],
+    suffix: [0xff, 0xd9],
+    mimetype: 'image/jpg',
+  },
+  {
+    prefix: [0xff, 0xd8],
+    suffix: [0xff, 0xd9],
+    mimetype: 'image/jpeg',
+  },
+];
+
+const docBufferHeaders = [
+  {
+    prefix: [0x25, 0x50, 0x44, 0x46, 0x2d],
+    mimetype: 'application/pdf',
+  },
+];
+
 /**
- * Takes an array of files and validates the mimetype, file header
- * and formats into a feedable object to the service layer
- * @param {*} fileArray array of files
- * @param {*} requiredImages required single images
- * @param {*} requiredImageArrays required imager arrays
- * @param {*} requiredDocArrays required document(attatchment) arrays
+ * Checks if the image has acceptable format and extension
+ * @param {File}[] images image array to be validated
+ * @returns {Boolean} valid/invalid
  */
-const FileValidator = (fileArray, requiredImages, requiredImageArrays, requiredDocArrays) => {
-  const imageBufferHeaders = [
-    {
-      prefix: [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a],
-      mimetype: 'image/png',
-    },
-    {
-      prefix: [0xff, 0xd8],
-      suffix: [0xff, 0xd9],
-      mimetype: 'image/jpg',
-    },
-    {
-      prefix: [0xff, 0xd8],
-      suffix: [0xff, 0xd9],
-      mimetype: 'image/jpeg',
-    },
-  ];
+const ImageValidator = (images) => images.length > 0 && images.every((image) => image.fieldname && image.fieldname === 'images' && validateType(
+  imageBufferHeaders, image.buffer, image.mimetype,
+));
 
-  const docBufferHeaders = [
-    {
-      prefix: [0x25, 0x50, 0x44, 0x46, 0x2d],
-      mimetype: 'application/pdf',
-    },
-  ];
+/**
+ * Checks if the document has acceptable format and extension
+ * @param {File} document document to be validated
+ */
+const DocumentValidator = (documents) => documents.length > 0 && documents.every((document) => document.fieldname && document.fieldname === 'documents' && validateType(
+  docBufferHeaders, document.buffer, document.mimetype,
+));
 
-  const imageArray = [];
-  const docArray = [];
-
-  let errorItem = fileArray.find((file) => {
-    if ([...requiredImages, ...requiredImageArrays].includes(file.fieldname)
-    && validateType(imageBufferHeaders, file.buffer, file.mimetype)) {
-      imageArray.push(file);
-      return false;
-    } if (requiredDocArrays.includes(file.fieldname)
-    && validateType(docBufferHeaders, file.buffer, file.mimetype)) {
-      docArray.push(file);
-      return false;
-    } return true;
-  });
-
-  if (errorItem) {
-    const fileError = new Errors.BadRequest(`File ${errorItem.fieldname} has unacceptable format or is not required`);
-    return { fileError, images: null, docs: null };
-  }
-
-  errorItem = [...requiredImages, ...requiredImageArrays, ...requiredDocArrays].find((name) => {
-    const fileNames = fileArray.map((file) => file.fieldname);
-    if (fileNames.includes(name)) return false;
-    return true;
-  });
-
-  if (errorItem) {
-    const fileError = new Errors.BadRequest(`File ${errorItem} is required`);
-    return { fileError, images: null, docs: null };
-  }
-
-  const initialObject = requiredImageArrays.reduce((obj, name) => ({ ...obj, [name]: [] }), {});
-
-  const images = imageArray.reduce((obj, image) => {
-    if ([image.fieldname] in obj) {
-      if (Array.isArray(obj[image.fieldname])) {
-        return { ...obj, [image.fieldname]: [...obj[image.fieldname], image] };
-      }
-      return { ...obj, [image.fieldname]: [obj[image.fieldname], image] };
-    }
-    return { ...obj, [image.fieldname]: image };
-  }, initialObject);
-
-  const docs = docArray.map((doc) => ({ name: doc.originalname, doc }));
-
-  return { fileError: null, images, docs };
-};
-
-module.exports = { FileValidator };
+module.exports = { ImageValidator, DocumentValidator };

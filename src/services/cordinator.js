@@ -1,8 +1,7 @@
 const { getDatabase } = require('../helpers/get_database');
 const Errors = require('../helpers/errors');
 const logger = require('../helpers/logger');
-const { fileUpload } = require('../helpers/file_upload_handler');
-const cloudinaryDir = require('../config/cloudinary.json');
+
 const {
   formatResponse, convertToTitleCase, groupByKey, changeObjectLabel,
 } = require('../helpers/minihelpers');
@@ -14,13 +13,13 @@ const {
  * @category Services
  */
 class CordinatorService {
-/**
+  /**
      * Creates a new cordinator
      * @param {string} name name of the cordinator
      * @param {string} university university of the cordinator
      * @param {string} description desctiption of the cordinator
      * @param {boolean} alumni type of the cordinator
-     * @param {File} profileImage profileImage of the cordinator
+     * @param {string} profileImage profileImage of the cordinator
      * @returns {string} projectId projectId of the cordinator
   */
   static async CreateCordinator({
@@ -43,15 +42,6 @@ class CordinatorService {
     const nameTitlecase = convertToTitleCase(name);
     const universityTitlecase = convertToTitleCase(university);
 
-    // upload the file and get the url
-    const profileImageUrl = await fileUpload({
-      file: profileImage, folder: cloudinaryDir.Cordinator.Profile,
-    });
-
-    if (!profileImageUrl) {
-      throw new Errors.InternalServerError('Image upload failed');
-    }
-
     let cordinator;
 
     try {
@@ -60,7 +50,7 @@ class CordinatorService {
         university: universityTitlecase,
         description,
         alumni,
-        profileImage: profileImageUrl,
+        profileImage,
         projectId,
       });
     } catch (error) {
@@ -121,7 +111,7 @@ class CordinatorService {
      * @param {string} university university of the cordinator
      * @param {string} description desctiption of the cordinator
      * @param {boolean} alumni type of the cordinator
-     * @param {File} profileImage profileImage of the cordinator
+     * @param {string} profileImage profileImage of the cordinator
      * @returns {string} projectId projectId of the cordinator
   */
   static async UpdateCordinator({
@@ -144,15 +134,6 @@ class CordinatorService {
     const nameTitlecase = convertToTitleCase(name);
     const universityTitlecase = convertToTitleCase(university);
 
-    // upload the file and get the url
-    const profileImageUrl = await fileUpload({
-      file: profileImage, folder: cloudinaryDir.Cordinator.Profile,
-    });
-
-    if (!profileImageUrl) {
-      throw new Errors.InternalServerError('Image upload failed');
-    }
-
     const project = await database.Project.findOne({ where: { id: projectId } });
     if (!project) {
       throw new Errors.BadRequest('A project with given project is not available');
@@ -162,7 +143,7 @@ class CordinatorService {
     cordinator.university = universityTitlecase;
     cordinator.description = description;
     cordinator.alumni = alumni;
-    cordinator.profileImage = profileImageUrl;
+    cordinator.profileImage = profileImage;
     cordinator.projectId = projectId;
 
     try {

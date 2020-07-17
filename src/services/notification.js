@@ -1,8 +1,6 @@
 const { getDatabase } = require('../helpers/get_database');
 const Errors = require('../helpers/errors');
 const logger = require('../helpers/logger');
-const { fileUpload } = require('../helpers/file_upload_handler');
-const cloudinaryDir = require('../config/cloudinary.json');
 const { convertToTitleCase, formatResponse } = require('../helpers/minihelpers');
 
 /**
@@ -17,9 +15,9 @@ class NotificationService {
    * @param {String} subHeader
    * @param {String} description
    * @param {String} subDescription
-   * @param {File} bannerImage
-   * @param {File} portraitImage
-   * @param {File}[] attatchments
+   * @param {String} bannerImage
+   * @param {String} portraitImage
+   * @param {String}[] attatchments
    */
   static async CreateNotification({
     header,
@@ -28,7 +26,7 @@ class NotificationService {
     subDescription,
     bannerImage,
     portraitImage,
-    docs,
+    attatchments,
   }) {
     const database = await getDatabase();
 
@@ -36,30 +34,6 @@ class NotificationService {
     const headerTitlecase = convertToTitleCase(header);
     // make header titlecase
     const subHeaderTitlecase = convertToTitleCase(subHeader);
-
-
-    // upload the files and get the url
-    const bannerImageUrl = await fileUpload({
-      file: bannerImage, folder: cloudinaryDir.Notification.Banner,
-    });
-    const portraitImageUrl = await fileUpload({
-      file: portraitImage, folder: cloudinaryDir.Notification.Portrait,
-    });
-
-    const promises = docs.map(async (document) => {
-      const attatchment = await fileUpload({
-        file: document.doc, folder: cloudinaryDir.Notification.Document,
-      });
-      return { name: document.name, attatchment };
-    });
-
-    const attatchments = await Promise.all(promises);
-
-    const attatchmentError = attatchments.some((attatchment) => (!(attatchment)));
-
-    if (!bannerImageUrl || !portraitImageUrl || attatchmentError) {
-      throw new Errors.InternalServerError('File upload failed');
-    }
 
     let notification;
 
@@ -71,8 +45,8 @@ class NotificationService {
           subHeader: subHeaderTitlecase,
           description,
           subDescription,
-          bannerImage: bannerImageUrl,
-          portraitImage: portraitImageUrl,
+          bannerImage,
+          portraitImage,
         }, { transaction: t });
 
         // insert notification id into attatchments id
@@ -139,6 +113,13 @@ class NotificationService {
   /**
      * Updates an existing notification
      * @param {string} id id of the notification
+     * @param {String} header
+     * @param {String} subHeader
+     * @param {String} description
+     * @param {String} subDescription
+     * @param {String} bannerImage
+     * @param {String} portraitImage
+     * @param {String}[] attatchments
   */
   static async UpdateNotification({
     id,
@@ -148,7 +129,7 @@ class NotificationService {
     subDescription,
     bannerImage,
     portraitImage,
-    docs,
+    attatchments,
   }) {
     const database = await getDatabase();
 
@@ -162,36 +143,12 @@ class NotificationService {
     // make header titlecase
     const subHeaderTitlecase = convertToTitleCase(subHeader);
 
-
-    // upload the files and get the url
-    const bannerImageUrl = await fileUpload({
-      file: bannerImage, folder: cloudinaryDir.Notification.Banner,
-    });
-    const portraitImageUrl = await fileUpload({
-      file: portraitImage, folder: cloudinaryDir.Notification.Portrait,
-    });
-
-    const promises = docs.map(async (document) => {
-      const attatchment = await fileUpload({
-        file: document.doc, folder: cloudinaryDir.Notification.Document,
-      });
-      return { name: document.name, attatchment };
-    });
-
-    const attatchments = await Promise.all(promises);
-
-    const attatchmentError = attatchments.some((attatchment) => (!(attatchment)));
-
-    if (!bannerImageUrl || !portraitImageUrl || attatchmentError) {
-      throw new Errors.InternalServerError('File upload failed');
-    }
-
     notification.header = headerTitlecase;
     notification.subHeader = subHeaderTitlecase;
     notification.description = description;
     notification.subDescription = subDescription;
-    notification.bannerImage = bannerImageUrl;
-    notification.portraitImage = portraitImageUrl;
+    notification.bannerImage = bannerImage;
+    notification.portraitImage = portraitImage;
 
     try {
       await database.sequelize.transaction(async (t) => {

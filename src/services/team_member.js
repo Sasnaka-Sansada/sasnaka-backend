@@ -1,8 +1,6 @@
 const { getDatabase } = require('../helpers/get_database');
 const Errors = require('../helpers/errors');
 const logger = require('../helpers/logger');
-const { fileUpload } = require('../helpers/file_upload_handler');
-const cloudinaryDir = require('../config/cloudinary.json');
 const {
   formatResponse, convertToTitleCase,
 } = require('../helpers/minihelpers');
@@ -22,8 +20,8 @@ class TeamMemberService {
      * @param {string} linkedin linkedIn url of the team member
      * @param {string} facebook facebook url of the team member
      * @param {string} twitter twitter url of the team member
-     * @param {File} profileImage profile image of the team member
-     * @returns {string}
+     * @param {string} profileImage profile image of the team member
+     * @returns {Object} Team Member
   */
   static async CreateTeamMember({
     name,
@@ -40,15 +38,6 @@ class TeamMemberService {
     // convert name to titilecase
     const nameTitlecase = convertToTitleCase(name);
 
-    // upload the profileImage file and get the url
-    const profileImageUrl = await fileUpload({
-      file: profileImage, folder: cloudinaryDir.TeamMember.Profile,
-    });
-
-    if (!profileImageUrl) {
-      throw new Errors.InternalServerError('Image upload failed');
-    }
-
     let teamMember;
 
     try {
@@ -60,7 +49,7 @@ class TeamMemberService {
         linkedin,
         facebook,
         twitter,
-        profileImage: profileImageUrl,
+        profileImage,
       });
     } catch (error) {
       logger.error(`Error while inserting data. ${error}`);
@@ -119,16 +108,6 @@ class TeamMemberService {
     // convert name to titlecase
     const nameTitlecase = convertToTitleCase(name);
 
-    // upload the file and get the url
-    const profileImageUrl = await fileUpload({
-      file: profileImage, folder: cloudinaryDir.TeamMember.Profile,
-    });
-
-    if (!profileImageUrl) {
-      throw new Errors.InternalServerError('Image upload failed');
-    }
-
-
     teamMember.name = nameTitlecase;
     teamMember.position = position;
     teamMember.achievements = achievements;
@@ -136,7 +115,7 @@ class TeamMemberService {
     teamMember.linkedin = linkedin;
     teamMember.facebook = facebook;
     teamMember.twitter = twitter;
-    teamMember.profileImage = profileImageUrl;
+    teamMember.profileImage = profileImage;
 
     try {
       await teamMember.save();

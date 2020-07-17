@@ -2,7 +2,6 @@ const ProjectService = require('../services/project');
 const {
   CreateProject, ProjectId, UpdateProject, ProjectPiller,
 } = require('../validators/project');
-const { FileValidator } = require('../validators/file_validator');
 
 /**
  * Controller which manages projects
@@ -21,10 +20,7 @@ class ProjectController {
     try {
       const { value, error } = CreateProject.validate(req.body);
       if (error) throw (error);
-      const { fileError, images } = FileValidator(req.files,
-        ['introductionImage', 'objectiveImage', 'processImage'], [], []);
-      if (fileError) throw fileError;
-      const project = await ProjectService.CreateProject({ ...value, ...images });
+      const project = await ProjectService.CreateProject(value);
       res.send(project).status(200);
     } catch (err) {
       next(err);
@@ -78,9 +74,7 @@ class ProjectController {
     try {
       const { value, error } = UpdateProject.validate({ id: req.params.id, ...req.body });
       if (error) throw (error);
-      const { fileError, images } = FileValidator(req.files, ['introductionImage', 'objectiveImage', 'processImage'], [], []);
-      if (fileError) throw fileError;
-      const project = await ProjectService.UpdateProject({ ...value, ...images });
+      const project = await ProjectService.UpdateProject(value);
       res.send(project).status(200);
     } catch (err) {
       next(err);

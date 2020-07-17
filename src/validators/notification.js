@@ -5,6 +5,12 @@ const CreateNotification = Joi.object().keys({
   subHeader: Joi.string().max(255).required().allow(null, ''),
   description: Joi.string().required(),
   subDescription: Joi.string().required().allow(null, ''),
+  bannerImage: Joi.string().uri().max(1023).required(),
+  portraitImage: Joi.string().uri().max(1023).required(),
+  attatchments: Joi.array().items({
+    name: Joi.string().max(255).required(),
+    attatchment: Joi.string().uri().max(1023).required(),
+  }).required().allow(null),
 });
 
 const UpdateNotification = Joi.object().keys({
@@ -13,6 +19,12 @@ const UpdateNotification = Joi.object().keys({
   subHeader: Joi.string().max(255).required().allow(null, ''),
   description: Joi.string().required(),
   subDescription: Joi.string().required().allow(null, ''),
+  bannerImage: Joi.string().uri().max(1023).required(),
+  portraitImage: Joi.string().uri().max(1023).required(),
+  attatchments: Joi.array().items({
+    name: Joi.string().max(255).required(),
+    attatchment: Joi.string().uri().max(1023).required(),
+  }).required().allow(null),
 });
 
 const NotificationId = Joi.object().keys({

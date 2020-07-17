@@ -10,6 +10,7 @@ const feedbackRoutes = require('./feedback');
 const sponsorRoutes = require('./sponsor');
 const resourcePersonRoutes = require('./resource_person');
 const userRoutes = require('./user');
+const assetRoutes = require('./asset');
 
 // routes dividing into subroutes
 const endPointsHandler = (app) => {
@@ -25,6 +26,7 @@ const endPointsHandler = (app) => {
   app.use('/api/sponsor', sponsorRoutes);
   app.use('/api/resource', resourcePersonRoutes);
   app.use('/api/user', userRoutes);
+  app.use('/api/asset', assetRoutes);
 };
 
 module.exports = { endPointsHandler };

@@ -1,8 +1,6 @@
 const { getDatabase } = require('../helpers/get_database');
 const Errors = require('../helpers/errors');
 const logger = require('../helpers/logger');
-const { fileUpload } = require('../helpers/file_upload_handler');
-const cloudinaryDir = require('../config/cloudinary.json');
 const { convertToTitleCase, formatResponse } = require('../helpers/minihelpers');
 const { calcLocalTime, calcCurrentTime } = require('../helpers/local_time');
 
@@ -21,9 +19,9 @@ class EventService {
      * @param {string} thumbnailDescription description of the thumbnail of the event
      * @param {string} thumbnailTitle title of the thumbnail of the event
      * @param {string} date date of the event
-     * @param {File} contentImage image of the content of the event
-     * @param {File} thumbnailImage image of the thumbnail of the event
-     * @param {File}[] subImages array of other images of the event
+     * @param {string} contentImage image of the content of the event
+     * @param {string} thumbnailImage image of the thumbnail of the event
+     * @param {string}[] subImages array of other images of the event
      * @params {string} projectId projectId of the event
      * @returns {Object} Event
   */
@@ -51,30 +49,6 @@ class EventService {
       throw new Errors.BadRequest('A project with the given id does not exist');
     }
 
-    // upload the files and get the url
-    const contentImageUrl = await fileUpload({
-      file: contentImage, folder: cloudinaryDir.Event.Content,
-    });
-    const thumbnailImageUrl = await fileUpload({
-      file: thumbnailImage, folder: cloudinaryDir.Event.Thumbnail,
-    });
-
-    const promises = subImages.map(async (image) => {
-      const img = await fileUpload({
-        file: image, folder: cloudinaryDir.Event.SubImage,
-      });
-      return img;
-    });
-
-
-    const subImageUrls = await Promise.all(promises);
-
-    const imageError = subImageUrls.some((image) => (!(image)));
-
-    if (!contentImageUrl || !thumbnailImageUrl || imageError) {
-      throw new Errors.InternalServerError('File upload failed');
-    }
-
     const dueDate = calcLocalTime(date, '+5.5');
 
     let event;
@@ -86,9 +60,9 @@ class EventService {
           headerTitle: headerTitleTitlecase,
           headerSinhalaTitle,
           headerDescription,
-          contentImage: contentImageUrl,
+          contentImage,
           contentDescription,
-          thumbnailImage: thumbnailImageUrl,
+          thumbnailImage,
           thumbnailDescription,
           thumbnailTitle: thumbnailTitleTitlecase,
           date: dueDate,
@@ -96,7 +70,7 @@ class EventService {
         }, { transaction: t });
 
         // insert event id into subImages
-        const subImageArray = subImageUrls.map((image) => (
+        const subImageArray = subImages.map((image) => (
           { image, eventId: event.dataValues.id }));
 
         // create tuples in event_image table
@@ -110,7 +84,7 @@ class EventService {
     // remove timestamp attributes
     event = formatResponse(event);
 
-    return { ...event, subImages: subImageUrls };
+    return { ...event, subImages };
   }
 
   /**
@@ -159,6 +133,18 @@ class EventService {
   /**
    * Updates an existing event
    * @param {string} id id of the event
+    * @param {string} headerTitle header title of the event
+    * @param {string} headerSinhalaTitle sinhala title of the header of the event
+    * @param {string} headerDescription description of the header of the event
+    * @param {string} contentDescription description of the content of the event
+    * @param {string} thumbnailDescription description of the thumbnail of the event
+    * @param {string} thumbnailTitle title of the thumbnail of the event
+    * @param {string} date date of the event
+    * @param {string} contentImage image of the content of the event
+    * @param {string} thumbnailImage image of the thumbnail of the event
+    * @param {string}[] subImages array of other images of the event
+    * @params {string} projectId projectId of the event
+    * @returns {Object} Event
 */
   static async UpdateEvent({
     id,
@@ -191,35 +177,14 @@ class EventService {
       throw new Errors.BadRequest('A project with the given id does not exist');
     }
 
-    // upload the files and get the url
-    const contentImageUrl = await fileUpload({
-      file: contentImage, folder: cloudinaryDir.Event.Content,
-    });
-    const thumbnailImageUrl = await fileUpload({
-      file: thumbnailImage, folder: cloudinaryDir.Event.Thumbnail,
-    });
-
-    const promises = subImages.map(async (image) => fileUpload({
-      file: image, folder: cloudinaryDir.Event.SubImage,
-    }));
-
-
-    const subImageUrls = await Promise.all(promises);
-
-    const imageError = subImageUrls.some((image) => (!(image)));
-
-    if (!contentImageUrl || !thumbnailImageUrl || imageError) {
-      throw new Errors.InternalServerError('File upload failed');
-    }
-
     const dueDate = calcLocalTime(date, '+5.5');
 
     event.headerTitle = headerTitleTitlecase;
     event.headerSinhalaTitle = headerSinhalaTitle;
     event.headerDescription = headerDescription;
-    event.contentImage = contentImageUrl;
+    event.contentImage = contentImage;
     event.contentDescription = contentDescription;
-    event.thumbnailImage = thumbnailImageUrl;
+    event.thumbnailImage = thumbnailImage;
     event.thumbnailDescription = thumbnailDescription;
     event.thumbnailTitle = thumbnailTitleTitlecase;
     event.date = dueDate;
@@ -233,7 +198,7 @@ class EventService {
         await database.EventImage.destroy({ where: { eventId: id } }, { transaction: t });
 
         // insert event id into subImages
-        const subImageArray = subImageUrls.map((image) => (
+        const subImageArray = subImages.map((image) => (
           { image, eventId: event.dataValues.id }));
 
         // create tuples in attatchment table
@@ -246,7 +211,7 @@ class EventService {
 
     // remove timestamp attributes
     event = formatResponse(event);
-    return { ...event, subImages: subImageUrls };
+    return { ...event, subImages };
   }
 
   /**
