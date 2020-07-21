@@ -7,7 +7,7 @@ const config = require('../config');
  * @param {String} password
  * @returns {String}
  */
-const hashPassword = (password) => bcrypt.hash(password, config.saltRounds);
+const hashPassword = async (password) => bcrypt.hash(password, config.saltRounds);
 
 /**
  * Compares a given password with the hash provided and returns true if similar
@@ -16,6 +16,8 @@ const hashPassword = (password) => bcrypt.hash(password, config.saltRounds);
  * @param {String} hashedPassword
  * @returns {Boolean}
  */
-const comparePassword = (password, hashedPassword) => bcrypt.compare(password, hashedPassword);
+const comparePassword = async (password, hashedPassword) => bcrypt.compare(
+  password, hashedPassword,
+);
 
 module.exports = { hashPassword, comparePassword };

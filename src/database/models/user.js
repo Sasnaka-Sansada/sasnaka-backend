@@ -16,11 +16,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING(1023),
       allowNull: false,
     },
-    firstName: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
-    lastName: {
+    name: {
       type: Sequelize.STRING,
       allowNull: false,
     },
@@ -35,6 +31,9 @@ module.exports = (sequelize, Sequelize) => {
     resourcePersonEmail: {
       type: Sequelize.BOOLEAN,
       defaultValue: false,
+    },
+    profileImage: {
+      type: Sequelize.STRING(1023),
     },
     createdAt: {
       type: Sequelize.DATE,

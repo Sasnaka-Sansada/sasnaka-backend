@@ -30,8 +30,7 @@ class ResourcePersonService {
    */
   static async sendResourceMail({
     recipientEmail,
-    recipientFirstName,
-    recipientLastName,
+    recipientName,
     resourcePersonName,
     resourcePersonEmail,
     resourcePersonContactNumber,
@@ -48,8 +47,8 @@ class ResourcePersonService {
       template: 'resource_person_notification',
       context: {
         recipientEmail,
-        recipientFirstName,
-        recipientLastName,
+        recipientName,
+
         resourcePersonName,
         resourcePersonEmail,
         resourcePersonContactNumber,
@@ -112,7 +111,7 @@ class ResourcePersonService {
 
       // find users that needed to be notified
       const notifiedUsers = await database.User.findAll({
-        attributes: ['email', 'firstName', 'lastName'],
+        attributes: ['email', 'name'],
         where: { resourcePersonEmail: true },
         order: [['createdAt', 'DESC']],
       });
@@ -121,8 +120,7 @@ class ResourcePersonService {
       notifiedUsers.forEach(async (user) => {
         await this.sendResourceMail({
           recipientEmail: user.email,
-          recipientFirstName: user.firstName,
-          recipientLastName: user.lastName,
+          recipientName: user.name,
 
           resourcePersonName: nameTitlecase,
           resourcePersonEmail: email,
@@ -220,7 +218,7 @@ class ResourcePersonService {
     const database = await getDatabase();
 
     const result = await database.User.findAll({
-      attributes: ['id', 'email', 'firstName', 'lastName', 'roleId'],
+      attributes: ['id', 'email', 'name', 'roleId'],
       where: { resourcePersonEmail: true },
       order: [['createdAt', 'DESC']],
     });

@@ -37,7 +37,7 @@ const passportConfig = async (passport) => {
         return done(err);
       }
 
-      const match = comparePassword(password, user.password);
+      const match = await comparePassword(password, user.password);
       if (!match) {
         return done(null, false, { message: 'Not a matching password' });
       }

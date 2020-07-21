@@ -4,7 +4,7 @@ const { Pillers } = require('../database/models/pillar');
 const CreateProject = Joi.object().keys({
   header: Joi.string().max(255).required(),
   subHeader: Joi.string().max(255).required(),
-  translatedHeader: Joi.string().max(255).required(),
+  translatedHeader: Joi.string().max(255).required().allow(null, ''),
   introduction: Joi.string().required(),
   objective: Joi.string().required(),
   process: Joi.string().required(),

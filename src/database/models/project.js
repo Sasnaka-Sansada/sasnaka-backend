@@ -18,7 +18,6 @@ module.exports = (sequelize, Sequelize) => {
     },
     translatedHeader: {
       type: Sequelize.STRING,
-      allowNull: false,
     },
     introduction: {
       type: Sequelize.TEXT,

@@ -18,8 +18,8 @@ class authController {
     try {
       const { value, error } = Registration.validate(req.body);
       if (error) throw (error);
-      await UserService.RegisterUsers(value);
-      res.sendStatus(200);
+      const user = await UserService.RegisterUser(value);
+      res.send(user).status(200);
     } catch (err) {
       next(err);
     }
@@ -34,9 +34,10 @@ class authController {
    */
   static async PostLogin(req, res, next) {
     try {
-      const { error } = Login.validate(req.body);
+      const { value, error } = Login.validate(req.body);
       if (error) throw (error);
-      res.sendStatus(200);
+      const user = await UserService.LoginUser(value);
+      res.send(user).status(200);
     } catch (err) {
       next(err);
     }

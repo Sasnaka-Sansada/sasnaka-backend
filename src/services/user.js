@@ -2,7 +2,7 @@ const { Op } = require('sequelize');
 const { getDatabase } = require('../helpers/get_database');
 const Errors = require('../helpers/errors');
 const logger = require('../helpers/logger');
-const { hashPassword } = require('../helpers/password');
+const { hashPassword, comparePassword } = require('../helpers/password');
 const { formatResponse } = require('../helpers/minihelpers');
 const { Administrator, EditorLevelA, EditorLevelD } = require('../database/models/role');
 
@@ -15,11 +15,11 @@ class UserService {
   /**
      * Creates an account for a user in the system
      * @param {string} email to be invited to
-     * @param {roleId} email to be invited to
+     * @param {string} roleId to be invited to
      * @returns {invitation} invitation created
   */
-  static async RegisterUsers({
-    token, firstName, lastName, password,
+  static async RegisterUser({
+    token, name, password, profileImage,
   }) {
     const database = await getDatabase();
 
@@ -39,25 +39,111 @@ class UserService {
 
     const hashedPassword = await hashPassword(password);
 
+    let user;
     try {
       await database.sequelize.transaction(async (t) => {
         await database.Invitation.destroy(
           { where: { email: invitation.email }, transaction: t },
         );
 
-        await database.User.create({
+        user = await database.User.create({
           email: invitation.email,
           password: hashedPassword,
-          firstName,
-          lastName,
+          name,
           roleId: invitation.roleId,
+          profileImage,
         }, { transaction: t });
       });
     } catch (error) {
       logger.error('Error while inserting data');
       throw new Errors.InternalServerError('Error while inserting data');
     }
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      profileImage: user.profileImage,
+      roleId: user.roleId,
+    };
   }
+
+  /**
+     * Creates an account for a user in the system
+     * @param {string} email to be invited to
+     * @param {roleId} email to be invited to
+     * @returns {invitation} invitation created
+  */
+  static async LoginUser({ email }) {
+    const database = await getDatabase();
+
+    const user = await database.User.findOne({
+      where: { email },
+      attributes: ['id', 'email', 'name', 'profileImage', 'roleId'],
+    });
+
+    return user;
+  }
+
+  /**
+     * Gets user details of an given user id
+     * @param {string} id uuid of the user
+     * @returns {Object} user
+  */
+  static async GetUser({ id }) {
+    const database = await getDatabase();
+
+    const user = await database.User.findOne({
+      where: { id },
+      attributes: ['id', 'email', 'name', 'profileImage', 'roleId'],
+    });
+
+    if (!user) {
+      throw new Errors.BadRequest('Invalid user id');
+    }
+
+    return user;
+  }
+
+  /**
+     * Updates the details of the user
+     * @param {string} id id of the user
+     * @param {string} name name of the user
+     * @param {oldpassword} email to be invited to
+     * @returns {invitation} invitation created
+  */
+  static async UpdateUser({
+    id, name, oldPassword, newPassword, profileImage,
+  }) {
+    const database = await getDatabase();
+
+    const user = await database.User.findOne({ where: { id } });
+
+    if (!user) {
+      throw new Errors.BadRequest('Invalid user id');
+    }
+
+    const correctOldPassword = await comparePassword(oldPassword, user.dataValues.password);
+
+    if (correctOldPassword) {
+      user.password = await hashPassword(newPassword);
+    } else {
+      throw new Errors.BadRequest('Invalid old password');
+    }
+
+    user.name = name;
+    user.profileImage = profileImage;
+
+    await user.save();
+
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      profileImage: user.profileImage,
+      roleId: user.roleId,
+    };
+  }
+
 
   /**
      * Returns all users with email recieving capability
@@ -67,7 +153,7 @@ class UserService {
     const database = await getDatabase();
 
     const result = await database.User.findAll({
-      attributes: ['id', 'email', 'firstName', 'lastName', 'roleId'],
+      attributes: ['id', 'email', 'name', 'roleId'],
       where: {
         [Op.or]: [
           { roleId: Administrator },

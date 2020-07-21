@@ -29,8 +29,7 @@ class SponsorService {
    */
   static async sendSponsorshipMail({
     recipientEmail,
-    recipientFirstName,
-    recipientLastName,
+    recipientName,
     sponsorName,
     sponsorEmail,
     sponsorContactNumber,
@@ -45,8 +44,7 @@ class SponsorService {
       template: 'sponsorship_notification',
       context: {
         recipientEmail,
-        recipientFirstName,
-        recipientLastName,
+        recipientName,
         sponsorName,
         sponsorEmail,
         sponsorContactNumber,
@@ -102,7 +100,7 @@ class SponsorService {
 
       // find users that needed to be notified
       const notifiedUsers = await database.User.findAll({
-        attributes: ['email', 'firstName', 'lastName'],
+        attributes: ['email', 'name'],
         where: { sponsorEmail: true },
         order: [['createdAt', 'DESC']],
       });
@@ -111,8 +109,7 @@ class SponsorService {
       notifiedUsers.forEach(async (user) => {
         await this.sendSponsorshipMail({
           recipientEmail: user.email,
-          recipientFirstName: user.firstName,
-          recipientLastName: user.lastName,
+          recipientName: user.name,
           sponsorName: nameTitlecase,
           sponsorEmail: email,
           sponsorContactNumber: contactNumber,
@@ -205,7 +202,7 @@ class SponsorService {
     const database = await getDatabase();
 
     const result = await database.User.findAll({
-      attributes: ['id', 'email', 'firstName', 'lastName', 'roleId'],
+      attributes: ['id', 'email', 'name', 'roleId'],
       where: { sponsorEmail: true },
       order: [['createdAt', 'DESC']],
     });
