@@ -8,6 +8,7 @@ const CreateResourcePerson = Joi.object().keys({
     .required(),
   type: Joi.string().max(255).required(),
   comment: Joi.string().allow(null, '').required(),
+  help: Joi.string().allow(null, '').required(),
 });
 
 const SharedEmailList = Joi.object().keys({

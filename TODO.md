@@ -1,4 +1,5 @@
 ## todo
+1. Change tests to match asset upload logic change
 2. role based access setting
 3. field validation discuss and finalize
 

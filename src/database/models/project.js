@@ -12,7 +12,14 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false,
       unique: true,
     },
-    subHeader: Sequelize.STRING,
+    subHeader: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    translatedHeader: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
     introduction: {
       type: Sequelize.TEXT,
       allowNull: false,
@@ -22,6 +29,10 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false,
     },
     process: {
+      type: Sequelize.TEXT,
+      allowNull: false,
+    },
+    thumbnailDescription: {
       type: Sequelize.TEXT,
       allowNull: false,
     },
@@ -37,9 +48,12 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING(1023),
       allowNull: false,
     },
+    thumbnailImage: {
+      type: Sequelize.STRING(1023),
+      allowNull: false,
+    },
     pillerId: {
       type: Sequelize.ENUM(Pillers),
-
     },
     createdAt: {
       type: Sequelize.DATE,
@@ -51,6 +65,10 @@ module.exports = (sequelize, Sequelize) => {
 
   // eslint-disable-next-line no-unused-vars
   Project.associate = (models) => {
+    models.Project.hasMany(models.Cordinator, {
+      onDelete: 'cascade', hooks: true, foreignKey: 'projectId', as: 'cordinator',
+    });
+    models.Project.hasMany(models.Event, { onDelete: 'cascade', hooks: true, foreignKey: 'projectId' });
   };
   return Project;
 };

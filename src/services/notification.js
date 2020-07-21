@@ -10,13 +10,14 @@ const { convertToTitleCase, formatResponse } = require('../helpers/minihelpers')
  */
 class NotificationService {
   /**
-   *
+   * Creates notification
    * @param {String} header
    * @param {String} subHeader
    * @param {String} description
    * @param {String} subDescription
    * @param {String} bannerImage
    * @param {String} portraitImage
+   * @param {Boolean} active
    * @param {String}[] attatchments
    */
   static async CreateNotification({
@@ -26,6 +27,7 @@ class NotificationService {
     subDescription,
     bannerImage,
     portraitImage,
+    active,
     attatchments,
   }) {
     const database = await getDatabase();
@@ -47,6 +49,7 @@ class NotificationService {
           subDescription,
           bannerImage,
           portraitImage,
+          active,
         }, { transaction: t });
 
         // insert notification id into attatchments id
@@ -119,6 +122,7 @@ class NotificationService {
      * @param {String} subDescription
      * @param {String} bannerImage
      * @param {String} portraitImage
+     * @param {Boolean} active
      * @param {String}[] attatchments
   */
   static async UpdateNotification({
@@ -130,6 +134,7 @@ class NotificationService {
     bannerImage,
     portraitImage,
     attatchments,
+    active,
   }) {
     const database = await getDatabase();
 
@@ -149,6 +154,7 @@ class NotificationService {
     notification.subDescription = subDescription;
     notification.bannerImage = bannerImage;
     notification.portraitImage = portraitImage;
+    notification.active = active;
 
     try {
       await database.sequelize.transaction(async (t) => {

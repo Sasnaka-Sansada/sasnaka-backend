@@ -5,7 +5,7 @@
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
-    "dev": "nodemon --watch src -L start",
+    "dev": "nodemon --watch src start",
     "db:migrate": "npx sequelize-cli db:migrate",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles --testTimeout=5000",
     "pretest": "cross-env NODE_ENV=test npm run db:migrate"

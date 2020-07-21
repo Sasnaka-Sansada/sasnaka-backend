@@ -95,6 +95,7 @@ class EventService {
     const database = await getDatabase();
 
     const event = await database.Event.findOne({ where: { id } });
+
     if (!event) {
       throw new Errors.BadRequest('A event with the given id does not exist');
     }

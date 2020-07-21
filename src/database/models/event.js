@@ -47,7 +47,7 @@ module.exports = (sequelize, Sequelize) => {
 
   // eslint-disable-next-line no-unused-vars
   Event.associate = (models) => {
-    models.Event.belongsTo(models.Project, { onDelete: 'cascade', hooks: true, foreignKey: 'projectId' });
+    models.Event.belongsTo(models.Project, { foreignKey: 'projectId' });
     models.Event.hasMany(models.EventImage, { onDelete: 'cascade', hooks: true, foreignKey: 'eventId' });
   };
   return Event;

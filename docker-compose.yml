@@ -32,7 +32,7 @@ services:
     tty: true        # docker run -t
     restart: on-failure
     depends_on:
-      # - db
+      - db
       - test_db
     ports:
       - "8000:8000"

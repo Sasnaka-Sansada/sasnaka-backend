@@ -21,6 +21,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false,
     },
+    help: Sequelize.TEXT,
     address: Sequelize.TEXT,
     comment: Sequelize.TEXT,
     createdAt: {

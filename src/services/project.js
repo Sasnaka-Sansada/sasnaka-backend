@@ -14,23 +14,29 @@ class ProjectService {
      * Creates a new project
      * @param {string} header header of the project
      * @param {string} subHeader subHeader of the project
+     * @param {string} translatedHeader translatedHeader of the project
      * @param {string} introduction introductionof the project
      * @param {string} objective objective of the project
      * @param {string} process process of the project
+     * @param {string} thumbnailDescription thumbnailDescription of the project
      * @param {string} introductionImage introductionImage of the project
      * @param {string} objectiveImage objectiveImage of the project
      * @param {string} processImage processImage of the project
+     * @param {string} thumbnailImage thumbnailImage of the project
      * @returns {string} pillerId pillerId of the project
   */
   static async CreateProject({
     header,
     subHeader,
+    translatedHeader,
     introduction,
     objective,
     process,
+    thumbnailDescription,
     introductionImage,
     objectiveImage,
     processImage,
+    thumbnailImage,
     pillerId,
   }) {
     const database = await getDatabase();
@@ -49,12 +55,15 @@ class ProjectService {
       project = await database.Project.create({
         header: headerTitlecase,
         subHeader,
+        translatedHeader,
         introduction,
         objective,
         process,
+        thumbnailDescription,
         introductionImage,
         objectiveImage,
         processImage,
+        thumbnailImage,
         pillerId,
       });
     } catch (error) {
@@ -95,7 +104,21 @@ class ProjectService {
   static async GetProject({ id }) {
     const database = await getDatabase();
 
-    let project = await database.Project.findOne({ where: { id } });
+    let project = await database.Project.findOne(
+      {
+        where: { id },
+        include: [
+          {
+            model: database.Event,
+            attributes: ['id', 'thumbnailImage', 'thumbnailDescription', 'thumbnailTitle'],
+          },
+          {
+            model: database.Cordinator,
+            attributes: ['id', 'name', 'profileImage'],
+          },
+        ],
+      },
+    );
     if (!project) {
       throw new Errors.BadRequest('A project with the given id does not exist');
     }
@@ -108,26 +131,32 @@ class ProjectService {
   /**
      * Updates an existing project
      * @param {string} id id of the project
-     * @param {String} header of the project
-     * @param {String} subHeader of the project
-     * @param {String} introduction of the project
-     * @param {String} objective of the project
-     * @param {String} process of the project
-     * @param {string} introductionImage of the project
-     * @param {string} objectiveImage of the project
-     * @param {string} processImage of the project
-     * @param {String} pillerId of the project
+     * @param {string} header header of the project
+     * @param {string} subHeader subHeader of the project
+     * @param {string} translatedHeader translatedHeader of the project
+     * @param {string} introduction introductionof the project
+     * @param {string} objective objective of the project
+     * @param {string} process process of the project
+     * @param {string} thumbnailDescription thumbnailDescription of the project
+     * @param {string} introductionImage introductionImage of the project
+     * @param {string} objectiveImage objectiveImage of the project
+     * @param {string} processImage processImage of the project
+     * @param {string} thumbnailImage thumbnailImage of the project
+     * @returns {string} pillerId pillerId of the project
   */
   static async UpdateProject({
     id,
     header,
     subHeader,
+    translatedHeader,
     introduction,
     objective,
     process,
+    thumbnailDescription,
     introductionImage,
     objectiveImage,
     processImage,
+    thumbnailImage,
     pillerId,
   }) {
     const database = await getDatabase();
@@ -147,12 +176,15 @@ class ProjectService {
 
     project.header = headerTitlecase;
     project.subHeader = subHeader;
+    project.translatedHeader = translatedHeader;
     project.introduction = introduction;
     project.objective = objective;
     project.process = process;
+    project.thumbnailDescription = thumbnailDescription;
     project.introductionImage = introductionImage;
     project.objectiveImage = objectiveImage;
     project.processImage = processImage;
+    project.thumbnailImage = thumbnailImage;
     project.pillerId = pillerId;
 
     try {
@@ -174,12 +206,15 @@ class ProjectService {
   static async ListProjects() {
     const database = await getDatabase();
 
-    const result = await database.Project.findAll({ order: [['createdAt', 'DESC']] });
+    const result = await database.Project.findAll({
+      order: [['createdAt', 'DESC']],
+      attributes: ['id', 'header', 'pillerId', 'thumbnailDescription', 'thumbnailImage'],
+    });
 
     // remove timestamp attributes
     let projects = result.map((project) => formatResponse(project));
 
-    projects = groupByKey(projects, 'pillerId', 'piller', 'projects');
+    projects = groupByKey(result, 'pillerId', 'piller', 'projects');
     return projects;
   }
 

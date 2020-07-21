@@ -3,9 +3,8 @@ const Errors = require('../helpers/errors');
 const logger = require('../helpers/logger');
 
 const {
-  formatResponse, convertToTitleCase, groupByKey, changeObjectLabel,
+  formatResponse, convertToTitleCase, groupByKey,
 } = require('../helpers/minihelpers');
-
 
 /**
  * Service that manages cordinator functionalities
@@ -20,6 +19,7 @@ class CordinatorService {
      * @param {string} description desctiption of the cordinator
      * @param {boolean} alumni type of the cordinator
      * @param {string} profileImage profileImage of the cordinator
+     * @param {string}[] alumniProjects projects the cordinator has cordinated in the past
      * @returns {string} projectId projectId of the cordinator
   */
   static async CreateCordinator({
@@ -29,6 +29,7 @@ class CordinatorService {
     alumni,
     profileImage,
     projectId,
+    alumniProjects,
   }) {
     const database = await getDatabase();
 
@@ -36,6 +37,17 @@ class CordinatorService {
     const project = await database.Project.findOne({ where: { id: projectId } });
     if (!project) {
       throw new Errors.BadRequest('A project with given project id does not exist');
+    }
+
+    const result = alumniProjects.map(
+      async (alumniProjectId) => database.Project.findOne({ where: { id: alumniProjectId } }),
+    );
+
+    let pastProjects = await Promise.all(result);
+
+    // throw error if at least one alumni project ids are invalid
+    if (pastProjects.some((pastProject) => !pastProject)) {
+      throw new Errors.BadRequest('Invalid alumni project');
     }
 
     // convert name, university to titilecase
@@ -58,10 +70,16 @@ class CordinatorService {
       throw new Errors.InternalServerError('Error while inserting data');
     }
 
+    pastProjects = alumniProjects.map(
+      (pastProject) => ({ pastProjectId: pastProject, cordinatorId: cordinator.dataValues.id }),
+    );
+
+    await database.AlumniProject.bulkCreate(pastProjects);
+
     // remove timestamp attributes
     cordinator = formatResponse(cordinator);
 
-    return { ...cordinator, pillerId: project.pillerId };
+    return { ...cordinator, pillerId: project.pillerId, alumniProjects };
   }
 
   /**
@@ -91,13 +109,24 @@ class CordinatorService {
   static async GetCordinator({ id }) {
     const database = await getDatabase();
 
-    let cordinator = await database.Cordinator.findOne({ where: { id } });
+    let cordinator = await database.Cordinator.findOne({
+      where: { id },
+      include: {
+        model: database.Project,
+        attributes: ['id'],
+        through: { attributes: [] },
+        as: 'alumniProjects',
+      },
+    });
     if (!cordinator) {
       throw new Errors.BadRequest('A cordinator with the given id does not exist');
     }
 
     // remove timestamp attributes
     cordinator = formatResponse(cordinator);
+
+    const alumniProjects = cordinator.alumniProjects.map((project) => project.id);
+    cordinator = { ...cordinator, alumniProjects };
 
     const project = await database.Project.findOne({ where: { id: cordinator.projectId } });
 
@@ -122,12 +151,25 @@ class CordinatorService {
     alumni,
     profileImage,
     projectId,
+    alumniProjects,
   }) {
     const database = await getDatabase();
 
     let cordinator = await database.Cordinator.findOne({ where: { id } });
     if (!cordinator) {
       throw new Errors.BadRequest('A cordinator with the given id does not exist');
+    }
+
+    // check if alumni projects are valid
+    const result = alumniProjects.map(
+      async (alumniProjectId) => database.Project.findOne({ where: { id: alumniProjectId } }),
+    );
+
+    let pastProjects = await Promise.all(result);
+
+    // throw error if at least one alumni project ids are invalid
+    if (pastProjects.some((pastProject) => !pastProject)) {
+      throw new Errors.BadRequest('Invalid alumni project');
     }
 
     // convert name, university to titlecase
@@ -153,10 +195,17 @@ class CordinatorService {
       throw new Errors.InternalServerError('Error while inserting data');
     }
 
+    pastProjects = alumniProjects.map(
+      (pastProject) => ({ pastProjectId: pastProject, cordinatorId: cordinator.dataValues.id }),
+    );
+
+    await database.AlumniProject.destroy({ where: { cordinatorId: id } });
+    await database.AlumniProject.bulkCreate(pastProjects);
+
     // remove timestamp attributes
     cordinator = formatResponse(cordinator);
 
-    return { ...cordinator, pillerId: project.pillerId };
+    return { ...cordinator, pillerId: project.pillerId, alumniProjects };
   }
 
   /**
@@ -168,20 +217,28 @@ class CordinatorService {
 
     const result = await database.Cordinator.findAll({
       order: [['createdAt', 'DESC']],
-      include: {
-        model: database.Project,
-        attributes: ['header', 'pillerId'],
-      },
-      raw: true,
+      include:
+        {
+          model: database.Project,
+          attributes: ['id'],
+          through: { attributes: [] },
+          as: 'alumniProjects',
+        },
     });
 
     // remove timestamp attributes
     let cordinators = result.map((cordinator) => formatResponse(cordinator));
 
-    // change nested attribute labels
-    cordinators = result.map((cordinator) => changeObjectLabel('Project.header', 'projectHeader', cordinator));
+    const promises = cordinators.map(async (cordinator) => {
+      const alumniProjects = cordinator.alumniProjects.map((project) => project.id);
+      const formattedCordinator = { ...cordinator, alumniProjects };
+      const project = await database.Project.findOne({ where: { id: cordinator.projectId } });
+      return { ...formattedCordinator, pillerId: project.pillerId, projectHeader: project.header };
+    });
 
-    cordinators = groupByKey(result, 'Project.pillerId', 'piller', 'cordinators');
+    cordinators = await Promise.all(promises);
+
+    cordinators = groupByKey(cordinators, 'pillerId', 'piller', 'cordinators');
 
     return cordinators;
   }

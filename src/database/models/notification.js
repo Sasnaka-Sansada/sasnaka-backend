@@ -23,6 +23,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING(1023),
       allowNull: false,
     },
+    active: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: true,
+    },
     createdAt: {
       type: Sequelize.DATE,
     },

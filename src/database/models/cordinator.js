@@ -34,7 +34,7 @@ module.exports = (sequelize, Sequelize) => {
 
   // eslint-disable-next-line no-unused-vars
   Cordinator.associate = (models) => {
-    models.Cordinator.belongsTo(models.Project, { onDelete: 'cascade', hooks: true, foreignKey: 'projectId' });
+    models.Cordinator.belongsTo(models.Project, { foreignKey: 'projectId', as: 'cordinator' });
   };
   return Cordinator;
 };
