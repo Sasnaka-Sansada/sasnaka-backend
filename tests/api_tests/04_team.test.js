@@ -3,12 +3,6 @@ const request = require('supertest');
 const app = require('../../src/server');
 const truncate = require('./truncate');
 
-const appRoot = process.env.PWD;
-
-const testImage = `${appRoot}/public/test_material/image.png`;
-const testPdf = `${appRoot}/public/test_material/pdf.pdf`;
-
-
 describe('Team', () => {
   beforeEach(async () => {
     await truncate();
@@ -18,14 +12,16 @@ describe('Team', () => {
     it('1. should create a new team member', async (done) => {
       const res = await request(app)
         .post('/api/team/create')
-        .field('name', 'header')
-        .field('position', 'some string')
-        .field('achievements', 'some string')
-        .field('description', 'some string2')
-        .field('linkedin', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('facebook', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('twitter', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Gayal Dassanayake',
+          position: 'Vice chancellor',
+          achievements: 'None atm',
+          description: 'some description',
+          profileImage: 'http://127.0.0.1:8000/NotificationBanner/347525700930799.jpg',
+          linkedin: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          facebook: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          twitter: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+        });
       expect(res.statusCode).toEqual(200);
 
       done();
@@ -34,14 +30,16 @@ describe('Team', () => {
     it('2. should throw an error if name is empty', async (done) => {
       const res = await request(app)
         .post('/api/team/create')
-        .field('name', '')
-        .field('position', 'some string')
-        .field('achievements', 'some string')
-        .field('description', 'some string2')
-        .field('linkedin', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('facebook', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('twitter', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .attach('profileImage', testImage);
+        .send({
+          name: '',
+          position: 'Vice chancellor',
+          achievements: 'None atm',
+          description: 'some description',
+          profileImage: 'http://127.0.0.1:8000/NotificationBanner/347525700930799.jpg',
+          linkedin: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          facebook: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          twitter: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+        });
       expect(res.statusCode).toEqual(400);
 
       done();
@@ -49,14 +47,16 @@ describe('Team', () => {
     it('3. should throw an error if position is empty', async (done) => {
       const res = await request(app)
         .post('/api/team/create')
-        .field('name', 'header')
-        .field('position', '')
-        .field('achievements', 'some string')
-        .field('description', 'some string2')
-        .field('linkedin', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('facebook', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('twitter', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Gayal Dassanayake',
+          position: '',
+          achievements: 'None atm',
+          description: 'some description',
+          profileImage: 'http://127.0.0.1:8000/NotificationBanner/347525700930799.jpg',
+          linkedin: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          facebook: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          twitter: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+        });
       expect(res.statusCode).toEqual(400);
 
       done();
@@ -64,14 +64,16 @@ describe('Team', () => {
     it('4. should throw an error if achievements is empty', async (done) => {
       const res = await request(app)
         .post('/api/team/create')
-        .field('name', 'header')
-        .field('position', 'some string')
-        .field('achievements', '')
-        .field('description', 'some string')
-        .field('linkedin', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('facebook', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('twitter', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Gayal Dassanayake',
+          position: 'Vice chancellor',
+          achievements: '',
+          description: 'some description',
+          profileImage: 'http://127.0.0.1:8000/NotificationBanner/347525700930799.jpg',
+          linkedin: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          facebook: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          twitter: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+        });
       expect(res.statusCode).toEqual(400);
 
       done();
@@ -79,14 +81,16 @@ describe('Team', () => {
     it('5. should throw an error if description is empty', async (done) => {
       const res = await request(app)
         .post('/api/team/create')
-        .field('name', 'some string')
-        .field('position', 'some string')
-        .field('achievements', 'some string')
-        .field('description', '')
-        .field('linkedin', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('facebook', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('twitter', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Gayal Dassanayake',
+          position: 'Vice chancellor',
+          achievements: 'None atm',
+          description: '',
+          profileImage: 'http://127.0.0.1:8000/NotificationBanner/347525700930799.jpg',
+          linkedin: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          facebook: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          twitter: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+        });
       expect(res.statusCode).toEqual(400);
 
       done();
@@ -95,14 +99,16 @@ describe('Team', () => {
     it('6. should create team member even if linkedin is empty', async (done) => {
       const res = await request(app)
         .post('/api/team/create')
-        .field('name', 'some string')
-        .field('position', 'some string')
-        .field('achievements', 'some string')
-        .field('description', 'blah blah')
-        .field('linkedin', '')
-        .field('facebook', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('twitter', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Gayal Dassanayake',
+          position: 'Vice chancellor',
+          achievements: 'None atm',
+          description: 'some description',
+          profileImage: 'http://127.0.0.1:8000/NotificationBanner/347525700930799.jpg',
+          linkedin: '',
+          facebook: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          twitter: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+        });
       expect(res.statusCode).toEqual(200);
 
       done();
@@ -111,14 +117,16 @@ describe('Team', () => {
     it('7. should create team member even if facebook is empty', async (done) => {
       const res = await request(app)
         .post('/api/team/create')
-        .field('name', 'some string')
-        .field('position', 'some string')
-        .field('achievements', 'some string')
-        .field('description', 'blah blah')
-        .field('linkedin', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('facebook', '')
-        .field('twitter', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Gayal Dassanayake',
+          position: 'Vice chancellor',
+          achievements: 'None atm',
+          description: 'some description',
+          profileImage: 'http://127.0.0.1:8000/NotificationBanner/347525700930799.jpg',
+          linkedin: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          facebook: '',
+          twitter: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+        });
 
       expect(res.statusCode).toEqual(200);
 
@@ -128,14 +136,16 @@ describe('Team', () => {
     it('8. should create team member even if twitter is empty', async (done) => {
       const res = await request(app)
         .post('/api/team/create')
-        .field('name', 'some string')
-        .field('position', 'some string')
-        .field('achievements', 'some string')
-        .field('description', 'blah blah')
-        .field('linkedin', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('facebook', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('twitter', '')
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Gayal Dassanayake',
+          position: 'Vice chancellor',
+          achievements: 'None atm',
+          description: 'some description',
+          profileImage: 'http://127.0.0.1:8000/NotificationBanner/347525700930799.jpg',
+          linkedin: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          facebook: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          twitter: '',
+        });
       expect(res.statusCode).toEqual(200);
 
       done();
@@ -144,14 +154,16 @@ describe('Team', () => {
     it('9. should throw an error if profile image is of a non acceptable format', async (done) => {
       const res = await request(app)
         .post('/api/team/create')
-        .field('name', 'header')
-        .field('position', 'some string')
-        .field('achievements', 'some string')
-        .field('description', 'some string2')
-        .field('linkedin', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('facebook', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('twitter', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .attach('profileImage', testPdf);
+        .send({
+          name: 'Gayal Dassanayake',
+          position: 'Vice chancellor',
+          achievements: 'None atm',
+          description: 'some description',
+          profileImage: 'not url',
+          linkedin: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          facebook: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          twitter: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+        });
 
       expect(res.statusCode).toEqual(400);
 
@@ -161,14 +173,16 @@ describe('Team', () => {
     it('10. should throw an error if profile image is empty', async (done) => {
       const res = await request(app)
         .post('/api/team/create')
-        .field('name', 'some string')
-        .field('position', 'some string')
-        .field('achievements', 'some string')
-        .field('description', 'dfasdsafad')
-        .field('linkedin', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('facebook', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('twitter', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .attach('profileImage', null);
+        .send({
+          name: 'Gayal Dassanayake',
+          position: 'Vice chancellor',
+          achievements: 'None atm',
+          description: 'some description',
+          profileImage: null,
+          linkedin: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          facebook: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          twitter: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+        });
       expect(res.statusCode).toEqual(400);
 
       done();
@@ -181,14 +195,16 @@ describe('Team', () => {
     beforeEach(async () => {
       teamres = await request(app)
         .post('/api/team/create')
-        .field('name', 'header')
-        .field('position', 'some string')
-        .field('achievements', 'some string')
-        .field('description', 'some string2')
-        .field('linkedin', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('facebook', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('twitter', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Gayal Dassanayake',
+          position: 'Vice chancellor',
+          achievements: 'None atm',
+          description: 'some description',
+          profileImage: 'http://127.0.0.1:8000/NotificationBanner/347525700930799.jpg',
+          linkedin: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          facebook: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          twitter: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+        });
     });
 
     it('1. should delete a team member', async (done) => {
@@ -212,27 +228,31 @@ describe('Team', () => {
     beforeEach(async () => {
       teamres = await request(app)
         .post('/api/team/create')
-        .field('name', 'header')
-        .field('position', 'some string')
-        .field('achievements', 'some string')
-        .field('description', 'some string2')
-        .field('linkedin', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('facebook', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('twitter', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Gayal Dassanayake',
+          position: 'Vice chancellor',
+          achievements: 'None atm',
+          description: 'some description',
+          profileImage: 'http://127.0.0.1:8000/NotificationBanner/347525700930799.jpg',
+          linkedin: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          facebook: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          twitter: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+        });
     });
 
     it('1. should update an existing team member', async (done) => {
       const res = await request(app)
         .put(`/api/team/${teamres.body.id}`)
-        .field('name', 'header')
-        .field('position', 'some string')
-        .field('achievements', 'some string')
-        .field('description', 'some string2')
-        .field('linkedin', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('facebook', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('twitter', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Gayal Dassanayake',
+          position: 'Vice chancellor',
+          achievements: 'None atm',
+          description: 'some description',
+          profileImage: 'http://127.0.0.1:8000/NotificationBanner/347525700930799.jpg',
+          linkedin: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          facebook: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          twitter: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+        });
       expect(res.statusCode).toEqual(200);
 
       done();
@@ -241,14 +261,16 @@ describe('Team', () => {
     it('2. should throw an error if name is empty', async (done) => {
       const res = await request(app)
         .put(`/api/team/${teamres.body.id}`)
-        .field('name', '')
-        .field('position', 'some string')
-        .field('achievements', 'some string')
-        .field('description', 'some string2')
-        .field('linkedin', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('facebook', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('twitter', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .attach('profileImage', testImage);
+        .send({
+          name: '',
+          position: 'Vice chancellor',
+          achievements: 'None atm',
+          description: 'some description',
+          profileImage: 'http://127.0.0.1:8000/NotificationBanner/347525700930799.jpg',
+          linkedin: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          facebook: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          twitter: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+        });
       expect(res.statusCode).toEqual(400);
 
       done();
@@ -256,14 +278,16 @@ describe('Team', () => {
     it('3. should throw an error if position is empty', async (done) => {
       const res = await request(app)
         .put(`/api/team/${teamres.body.id}`)
-        .field('name', 'header')
-        .field('position', '')
-        .field('achievements', 'some string')
-        .field('description', 'some string2')
-        .field('linkedin', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('facebook', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('twitter', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Gayal Dassanayake',
+          position: '',
+          achievements: 'None atm',
+          description: 'some description',
+          profileImage: 'http://127.0.0.1:8000/NotificationBanner/347525700930799.jpg',
+          linkedin: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          facebook: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          twitter: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+        });
       expect(res.statusCode).toEqual(400);
 
       done();
@@ -271,14 +295,16 @@ describe('Team', () => {
     it('4. should throw an error if achievements is empty', async (done) => {
       const res = await request(app)
         .put(`/api/team/${teamres.body.id}`)
-        .field('name', 'header')
-        .field('position', 'some string')
-        .field('achievements', '')
-        .field('description', 'some string')
-        .field('linkedin', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('facebook', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('twitter', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Gayal Dassanayake',
+          position: 'Vice chancellor',
+          achievements: '',
+          description: 'some description',
+          profileImage: 'http://127.0.0.1:8000/NotificationBanner/347525700930799.jpg',
+          linkedin: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          facebook: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          twitter: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+        });
       expect(res.statusCode).toEqual(400);
 
       done();
@@ -286,14 +312,16 @@ describe('Team', () => {
     it('5. should throw an error if description is empty', async (done) => {
       const res = await request(app)
         .put(`/api/team/${teamres.body.id}`)
-        .field('name', 'some string')
-        .field('position', 'some string')
-        .field('achievements', 'some string')
-        .field('description', '')
-        .field('linkedin', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('facebook', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('twitter', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Gayal Dassanayake',
+          position: 'Vice chancellor',
+          achievements: 'None atm',
+          description: '',
+          profileImage: 'http://127.0.0.1:8000/NotificationBanner/347525700930799.jpg',
+          linkedin: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          facebook: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          twitter: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+        });
       expect(res.statusCode).toEqual(400);
 
       done();
@@ -302,14 +330,16 @@ describe('Team', () => {
     it('6. should update team member even if linkedin is empty', async (done) => {
       const res = await request(app)
         .put(`/api/team/${teamres.body.id}`)
-        .field('name', 'some string')
-        .field('position', 'some string')
-        .field('achievements', 'some string')
-        .field('description', 'blah blah')
-        .field('linkedin', '')
-        .field('facebook', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('twitter', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Gayal Dassanayake',
+          position: 'Vice chancellor',
+          achievements: 'None atm',
+          description: 'some description',
+          profileImage: 'http://127.0.0.1:8000/NotificationBanner/347525700930799.jpg',
+          linkedin: '',
+          facebook: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          twitter: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+        });
       expect(res.statusCode).toEqual(200);
 
       done();
@@ -318,14 +348,16 @@ describe('Team', () => {
     it('7. should update team member even if facebook is empty', async (done) => {
       const res = await request(app)
         .put(`/api/team/${teamres.body.id}`)
-        .field('name', 'some string')
-        .field('position', 'some string')
-        .field('achievements', 'some string')
-        .field('description', 'blah blah')
-        .field('linkedin', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('facebook', '')
-        .field('twitter', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Gayal Dassanayake',
+          position: 'Vice chancellor',
+          achievements: 'None atm',
+          description: 'some description',
+          profileImage: 'http://127.0.0.1:8000/NotificationBanner/347525700930799.jpg',
+          linkedin: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          facebook: '',
+          twitter: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+        });
 
       expect(res.statusCode).toEqual(200);
 
@@ -335,14 +367,16 @@ describe('Team', () => {
     it('8. should update team member even if twitter is empty', async (done) => {
       const res = await request(app)
         .put(`/api/team/${teamres.body.id}`)
-        .field('name', 'some string')
-        .field('position', 'some string')
-        .field('achievements', 'some string')
-        .field('description', 'blah blah')
-        .field('linkedin', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('facebook', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('twitter', '')
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Gayal Dassanayake',
+          position: 'Vice chancellor',
+          achievements: 'None atm',
+          description: 'some description',
+          profileImage: 'http://127.0.0.1:8000/NotificationBanner/347525700930799.jpg',
+          linkedin: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          facebook: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          twitter: '',
+        });
       expect(res.statusCode).toEqual(200);
 
       done();
@@ -351,14 +385,16 @@ describe('Team', () => {
     it('9. should throw an error if profile image is of a non acceptable format', async (done) => {
       const res = await request(app)
         .put(`/api/team/${teamres.body.id}`)
-        .field('name', 'header')
-        .field('position', 'some string')
-        .field('achievements', 'some string')
-        .field('description', 'some string2')
-        .field('linkedin', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('facebook', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('twitter', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .attach('profileImage', testPdf);
+        .send({
+          name: 'Gayal Dassanayake',
+          position: 'Vice chancellor',
+          achievements: 'None atm',
+          description: 'some description',
+          profileImage: 'not url',
+          linkedin: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          facebook: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          twitter: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+        });
 
       expect(res.statusCode).toEqual(400);
 
@@ -368,14 +404,16 @@ describe('Team', () => {
     it('10. should throw an error if profile image is empty', async (done) => {
       const res = await request(app)
         .put(`/api/team/${teamres.body.id}`)
-        .field('name', 'some string')
-        .field('position', 'some string')
-        .field('achievements', 'some string')
-        .field('description', 'dfasdsafad')
-        .field('linkedin', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('facebook', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('twitter', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .attach('profileImage', null);
+        .send({
+          name: 'Gayal Dassanayake',
+          position: 'Vice chancellor',
+          achievements: 'None atm',
+          description: 'some description',
+          profileImage: '',
+          linkedin: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          facebook: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          twitter: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+        });
       expect(res.statusCode).toEqual(400);
 
       done();
@@ -385,14 +423,16 @@ describe('Team', () => {
     it('1. should list all team members', async (done) => {
       const postres = await request(app)
         .post('/api/team/create')
-        .field('name', 'header')
-        .field('position', 'some string')
-        .field('achievements', 'some string')
-        .field('description', 'some string2')
-        .field('linkedin', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('facebook', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .field('twitter', 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0')
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Gayal Dassanayake',
+          position: 'Vice chancellor',
+          achievements: 'None atm',
+          description: 'some description',
+          profileImage: 'http://127.0.0.1:8000/NotificationBanner/347525700930799.jpg',
+          linkedin: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          facebook: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+          twitter: 'https://docs.google.com/spreadsheets/d/1Nc52uWIcZ4dKnwRwiEqs2_ccijqgoS5dTFgWHuHYltE/edit#gid=0',
+        });
 
       const listres = await request(app)
         .get('/api/team/list');

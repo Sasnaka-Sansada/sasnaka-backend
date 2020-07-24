@@ -243,6 +243,12 @@ class EventService {
   static async ListEventsOfAProject({ projectId }) {
     const database = await getDatabase();
 
+    const project = await database.Project.findOne({ where: { id: projectId } });
+
+    if (!project) {
+      throw new Errors.BadRequest('Invalid project id!');
+    }
+
     const result = await database.Event.findAll(
       {
         where: { projectId },

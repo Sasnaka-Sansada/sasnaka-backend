@@ -3,27 +3,26 @@ const request = require('supertest');
 const app = require('../../src/server');
 const truncate = require('./truncate');
 
-const appRoot = process.env.PWD;
-
-const testImage = `${appRoot}/public/test_material/image.png`;
-const testPdf = `${appRoot}/public/test_material/pdf.pdf`;
-
-
 describe('Cordinator', () => {
   let projectres;
   beforeEach(async () => {
     await truncate();
     projectres = await request(app)
       .post('/api/project/create')
-      .field('header', 'header')
-      .field('subHeader', 'some string')
-      .field('introduction', 'some string2')
-      .field('objective', 'not empty')
-      .field('process', 'blah blah')
-      .field('pillerId', 'LEADERSHIP_GROOMING')
-      .attach('introductionImage', testImage)
-      .attach('objectiveImage', testImage)
-      .attach('processImage', testImage);
+      .send({
+        header: 'header23',
+        subHeader: 'some string',
+        translatedHeader: 'නම',
+        introduction: 'some string2',
+        objective: 'not empty',
+        process: 'blah blah',
+        thumbnailDescription: 'some description',
+        pillerId: 'LEADERSHIP_GROOMING',
+        introductionImage: 'http://127.0.0.1:8000/Images/147689748061758.jpg',
+        objectiveImage: 'http://127.0.0.1:8000/Images/147689748061758.jpg',
+        processImage: 'http://127.0.0.1:8000/Images/147689748061758.jpg',
+        thumbnailImage: 'http://127.0.0.1:8000/Images/147689748061758.jpg',
+      });
   });
 
   describe('Create', () => {
@@ -32,12 +31,17 @@ describe('Cordinator', () => {
 
       const cordinatorres = await request(app)
         .post('/api/cordinator/create')
-        .field('name', 'John John')
-        .field('university', 'some string')
-        .field('description', 'some string2')
-        .field('alumni', true)
-        .field('projectId', projectres.body.id)
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Kamal',
+          university: 'UoM',
+          description: 'Blah blah',
+          alumni: false,
+          profileImage: 'http://127.0.0.1:8000/Images/147689748061758.jpg',
+          projectId: projectres.body.id,
+          alumniProjects: [
+            projectres.body.id,
+          ],
+        });
       expect(cordinatorres.statusCode).toEqual(200);
 
       done();
@@ -46,12 +50,17 @@ describe('Cordinator', () => {
     it('2. should throw an error if project id is invalid', async (done) => {
       const cordinatorres = await request(app)
         .post('/api/cordinator/create')
-        .field('name', 'John John')
-        .field('university', 'some string')
-        .field('description', 'some string2')
-        .field('alumni', true)
-        .field('projectId', '2de679ab-b4b7-40ca-806a-740c8626613e')
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Kamal',
+          university: 'UoM',
+          description: 'Blah blah',
+          alumni: false,
+          profileImage: 'http://127.0.0.1:8000/Images/147689748061758.jpg',
+          projectId: '2de679ab-b4b7-40ca-806a-740c8626613e',
+          alumniProjects: [
+            projectres.body.id,
+          ],
+        });
       expect(cordinatorres.statusCode).toEqual(400);
       done();
     });
@@ -59,12 +68,17 @@ describe('Cordinator', () => {
     it('3. should throw an error if name is empty', async (done) => {
       const cordinatorres = await request(app)
         .post('/api/cordinator/create')
-        .field('name', '')
-        .field('university', 'some string')
-        .field('description', 'some string2')
-        .field('alumni', true)
-        .field('projectId', projectres.body.id)
-        .attach('profileImage', testImage);
+        .send({
+          name: '',
+          university: 'UoM',
+          description: 'Blah blah',
+          alumni: false,
+          profileImage: 'http://127.0.0.1:8000/Images/147689748061758.jpg',
+          projectId: projectres.body.id,
+          alumniProjects: [
+            projectres.body.id,
+          ],
+        });
       expect(cordinatorres.statusCode).toEqual(400);
 
       done();
@@ -73,12 +87,17 @@ describe('Cordinator', () => {
     it('4. should create cordinator even if university is empty', async (done) => {
       const cordinatorres = await request(app)
         .post('/api/cordinator/create')
-        .field('name', 'John John')
-        .field('university', '')
-        .field('description', 'some string2')
-        .field('alumni', true)
-        .field('projectId', projectres.body.id)
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Kamal',
+          university: '',
+          description: 'Blah blah',
+          alumni: false,
+          profileImage: 'http://127.0.0.1:8000/Images/147689748061758.jpg',
+          projectId: projectres.body.id,
+          alumniProjects: [
+            projectres.body.id,
+          ],
+        });
       expect(cordinatorres.statusCode).toEqual(200);
 
       done();
@@ -87,12 +106,17 @@ describe('Cordinator', () => {
     it('5. should accept even if alumni boolean is given as string', async (done) => {
       const cordinatorres = await request(app)
         .post('/api/cordinator/create')
-        .field('name', 'John John')
-        .field('university', 'university')
-        .field('description', 'description')
-        .field('alumni', 'true')
-        .field('projectId', projectres.body.id)
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Kamal',
+          university: 'UoM',
+          description: 'Blah blah',
+          alumni: 'false',
+          profileImage: 'http://127.0.0.1:8000/Images/147689748061758.jpg',
+          projectId: projectres.body.id,
+          alumniProjects: [
+            projectres.body.id,
+          ],
+        });
       expect(cordinatorres.statusCode).toEqual(200);
 
       done();
@@ -100,12 +124,17 @@ describe('Cordinator', () => {
     it('6. should throw an error if alumni is neither true nor false', async (done) => {
       const cordinatorres = await request(app)
         .post('/api/cordinator/create')
-        .field('name', 'John John')
-        .field('university', 'university')
-        .field('description', 'description')
-        .field('alumni', 'some value')
-        .field('projectId', projectres.body.id)
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Kamal',
+          university: 'UoM',
+          description: 'Blah blah',
+          alumni: 'not true nor false',
+          profileImage: 'http://127.0.0.1:8000/Images/147689748061758.jpg',
+          projectId: projectres.body.id,
+          alumniProjects: [
+            projectres.body.id,
+          ],
+        });
       expect(cordinatorres.statusCode).toEqual(400);
 
       done();
@@ -113,12 +142,17 @@ describe('Cordinator', () => {
     it('7. should throw an error if profile image is of a non acceptable format', async (done) => {
       const cordinatorres = await request(app)
         .post('/api/cordinator/create')
-        .field('name', 'John John')
-        .field('university', 'university')
-        .field('description', 'description')
-        .field('alumni', 'some value')
-        .field('projectId', projectres.body.id)
-        .attach('profileImage', testPdf);
+        .send({
+          name: 'Kamal',
+          university: 'UoM',
+          description: 'Blah blah',
+          alumni: false,
+          profileImage: 'not url',
+          projectId: projectres.body.id,
+          alumniProjects: [
+            projectres.body.id,
+          ],
+        });
       expect(cordinatorres.statusCode).toEqual(400);
 
       done();
@@ -128,13 +162,17 @@ describe('Cordinator', () => {
     it('1. should get a cordinator', async (done) => {
       const cordinatorres = await request(app)
         .post('/api/cordinator/create')
-        .field('name', 'John John')
-        .field('university', 'some string')
-        .field('description', 'some string2')
-        .field('alumni', true)
-        .field('projectId', projectres.body.id)
-        .attach('profileImage', testImage);
-
+        .send({
+          name: 'Kamal',
+          university: 'UoM',
+          description: 'Blah blah',
+          alumni: false,
+          profileImage: 'http://127.0.0.1:8000/Images/147689748061758.jpg',
+          projectId: projectres.body.id,
+          alumniProjects: [
+            projectres.body.id,
+          ],
+        });
       expect(cordinatorres.statusCode).toEqual(200);
 
       const getres = await request(app)
@@ -155,12 +193,17 @@ describe('Cordinator', () => {
     it('1. should delete a cordinator', async (done) => {
       const cordinatorres = await request(app)
         .post('/api/cordinator/create')
-        .field('name', 'John John')
-        .field('university', 'some string')
-        .field('description', 'some string2')
-        .field('alumni', true)
-        .field('projectId', projectres.body.id)
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Kamal',
+          university: 'UoM',
+          description: 'Blah blah',
+          alumni: false,
+          profileImage: 'http://127.0.0.1:8000/Images/147689748061758.jpg',
+          projectId: projectres.body.id,
+          alumniProjects: [
+            projectres.body.id,
+          ],
+        });
 
       expect(cordinatorres.statusCode).toEqual(200);
 
@@ -183,12 +226,17 @@ describe('Cordinator', () => {
     beforeEach(async () => {
       cordinatorres = await request(app)
         .post('/api/cordinator/create')
-        .field('name', 'John John')
-        .field('university', 'some string')
-        .field('description', 'some string2')
-        .field('alumni', true)
-        .field('projectId', projectres.body.id)
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Kamal',
+          university: 'UoM',
+          description: 'Blah blah',
+          alumni: false,
+          profileImage: 'http://127.0.0.1:8000/Images/147689748061758.jpg',
+          projectId: projectres.body.id,
+          alumniProjects: [
+            projectres.body.id,
+          ],
+        });
       expect(cordinatorres.statusCode).toEqual(200);
     });
 
@@ -197,12 +245,17 @@ describe('Cordinator', () => {
 
       const updateres = await request(app)
         .put(`/api/cordinator/${cordinatorres.body.id}`)
-        .field('name', 'John John Hello')
-        .field('university', 'some string')
-        .field('description', 'some string2')
-        .field('alumni', true)
-        .field('projectId', projectres.body.id)
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Kamal',
+          university: 'UoM',
+          description: 'Blah blah',
+          alumni: false,
+          profileImage: 'http://127.0.0.1:8000/Images/147689748061758.jpg',
+          projectId: projectres.body.id,
+          alumniProjects: [
+            projectres.body.id,
+          ],
+        });
       expect(updateres.statusCode).toEqual(200);
 
       done();
@@ -211,12 +264,17 @@ describe('Cordinator', () => {
     it('2. should throw an error if cordinator id is invalid', async (done) => {
       const updateres = await request(app)
         .put('/api/cordinator/2de679ab-b4b7-40ca-806a-740c8626613e')
-        .field('name', 'John John')
-        .field('university', 'some string')
-        .field('description', 'some string2')
-        .field('alumni', true)
-        .field('projectId', projectres.body.id)
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Kamal',
+          university: 'UoM',
+          description: 'Blah blah',
+          alumni: false,
+          profileImage: 'http://127.0.0.1:8000/Images/147689748061758.jpg',
+          projectId: projectres.body.id,
+          alumniProjects: [
+            projectres.body.id,
+          ],
+        });
       expect(updateres.statusCode).toEqual(400);
       done();
     });
@@ -224,12 +282,17 @@ describe('Cordinator', () => {
     it('3. should throw an error if project id is invalid', async (done) => {
       const updateres = await request(app)
         .put(`/api/cordinator/${cordinatorres.body.id}`)
-        .field('name', 'John John')
-        .field('university', 'some string')
-        .field('description', 'some string2')
-        .field('alumni', true)
-        .field('projectId', '2de679ab-b4b7-40ca-806a-740c8626613e')
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Kamal',
+          university: 'UoM',
+          description: 'Blah blah',
+          alumni: false,
+          profileImage: 'http://127.0.0.1:8000/Images/147689748061758.jpg',
+          projectId: '2de679ab-b4b7-40ca-806a-740c8626613e',
+          alumniProjects: [
+            projectres.body.id,
+          ],
+        });
       expect(updateres.statusCode).toEqual(400);
       done();
     });
@@ -237,12 +300,17 @@ describe('Cordinator', () => {
     it('4. should throw an error if name is empty', async (done) => {
       const updateres = await request(app)
         .put(`/api/cordinator/${cordinatorres.body.id}`)
-        .field('name', '')
-        .field('university', 'some string')
-        .field('description', 'some string2')
-        .field('alumni', true)
-        .field('projectId', projectres.body.id)
-        .attach('profileImage', testImage);
+        .send({
+          name: '',
+          university: 'UoM',
+          description: 'Blah blah',
+          alumni: false,
+          profileImage: 'http://127.0.0.1:8000/Images/147689748061758.jpg',
+          projectId: projectres.body.id,
+          alumniProjects: [
+            projectres.body.id,
+          ],
+        });
       expect(updateres.statusCode).toEqual(400);
 
       done();
@@ -251,12 +319,17 @@ describe('Cordinator', () => {
     it('5. should create cordinator even if university is empty', async (done) => {
       const updateres = await request(app)
         .put(`/api/cordinator/${cordinatorres.body.id}`)
-        .field('name', 'John John')
-        .field('university', '')
-        .field('description', 'some string2')
-        .field('alumni', true)
-        .field('projectId', projectres.body.id)
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Kamal',
+          university: '',
+          description: 'Blah blah',
+          alumni: false,
+          profileImage: 'http://127.0.0.1:8000/Images/147689748061758.jpg',
+          projectId: projectres.body.id,
+          alumniProjects: [
+            projectres.body.id,
+          ],
+        });
       expect(updateres.statusCode).toEqual(200);
 
       done();
@@ -265,12 +338,17 @@ describe('Cordinator', () => {
     it('6. should accept even if alumni boolean is given as string', async (done) => {
       const updateres = await request(app)
         .put(`/api/cordinator/${cordinatorres.body.id}`)
-        .field('name', 'John John')
-        .field('university', 'university')
-        .field('description', 'description')
-        .field('alumni', 'true')
-        .field('projectId', projectres.body.id)
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Kamal',
+          university: 'UoM',
+          description: 'Blah blah',
+          alumni: 'false',
+          profileImage: 'http://127.0.0.1:8000/Images/147689748061758.jpg',
+          projectId: projectres.body.id,
+          alumniProjects: [
+            projectres.body.id,
+          ],
+        });
       expect(updateres.statusCode).toEqual(200);
 
       done();
@@ -278,12 +356,17 @@ describe('Cordinator', () => {
     it('7. should throw an error if alumni is neither true nor false', async (done) => {
       const updateres = await request(app)
         .put(`/api/cordinator/${cordinatorres.body.id}`)
-        .field('name', 'John John')
-        .field('university', 'university')
-        .field('description', 'description')
-        .field('alumni', 'some value')
-        .field('projectId', projectres.body.id)
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Kamal',
+          university: 'UoM',
+          description: 'Blah blah',
+          alumni: 'not false',
+          profileImage: 'http://127.0.0.1:8000/Images/147689748061758.jpg',
+          projectId: projectres.body.id,
+          alumniProjects: [
+            projectres.body.id,
+          ],
+        });
       expect(updateres.statusCode).toEqual(400);
 
       done();
@@ -291,12 +374,17 @@ describe('Cordinator', () => {
     it('8. should throw an error if profile image is of a non acceptable format', async (done) => {
       const updateres = await request(app)
         .put(`/api/cordinator/${cordinatorres.body.id}`)
-        .field('name', 'John John')
-        .field('university', 'university')
-        .field('description', 'description')
-        .field('alumni', 'some value')
-        .field('projectId', projectres.body.id)
-        .attach('profileImage', testPdf);
+        .send({
+          name: 'Kamal',
+          university: 'UoM',
+          description: 'Blah blah',
+          alumni: false,
+          profileImage: 'not url',
+          projectId: projectres.body.id,
+          alumniProjects: [
+            projectres.body.id,
+          ],
+        });
       expect(updateres.statusCode).toEqual(400);
 
       done();
@@ -306,12 +394,17 @@ describe('Cordinator', () => {
     it('1. should list all cordinators', async (done) => {
       const cordinatorres = await request(app)
         .post('/api/cordinator/create')
-        .field('name', 'John John')
-        .field('university', 'some string')
-        .field('description', 'some string2')
-        .field('alumni', true)
-        .field('projectId', projectres.body.id)
-        .attach('profileImage', testImage);
+        .send({
+          name: 'Kamal',
+          university: 'UoM',
+          description: 'Blah blah',
+          alumni: false,
+          profileImage: 'http://127.0.0.1:8000/Images/147689748061758.jpg',
+          projectId: projectres.body.id,
+          alumniProjects: [
+            projectres.body.id,
+          ],
+        });
       expect(cordinatorres.statusCode).toEqual(200);
 
       const listres = await request(app)
