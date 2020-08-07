@@ -12,7 +12,7 @@
 6. Change email button href in the .env and add twitter link
 7. Change HOST_DOMAIN in the .env to the correct domain for image, pdf static GET url to be correct and
  remove port number in helpers/file_upload_handler=>function localUpload=> line 55
-
+8. remove CORS
 ## done
 - Build local file saving as well
 - Complete mail sending after discussing with oshan/ ruchira aiyala
@@ -37,11 +37,13 @@
 	```bash
 	docker build -t sasnaka-sansada .
 	```
-- to run the db and server together(uncommenting the last line of the dockerfile)
+- to run the db, test db and server in the background and enter interactive mode(uncommenting the last line of the dockerfile)
   ```bash
-	docker-compose up
+	docker-compose up -d
+	docker container ls
+	docker exec -it <container_id> /bin/bash
 	```
-- to run db and server interactively
+- or
  ```bash
 	docker-compose run --service-ports db -d
   docker-compose run --service-ports sasnaka-backend
