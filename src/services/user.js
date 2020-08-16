@@ -169,5 +169,28 @@ class UserService {
 
     return users;
   }
+
+  /**
+     * Updates the details of the user
+     * @param {String[]} emailList email list to be updated with new role
+     * @param {string} roleId role id of the new role
+  */
+  static async UpdateRole({ emailList, roleId }) {
+    const database = await getDatabase();
+
+    const promises = emailList.map(async (email) => database.User.findOne({ where: { email } }));
+
+    const users = await Promise.all(promises);
+
+    if (users.includes(null) || users.includes(undefined)) {
+      throw new Errors.BadRequest('Unregistered emails in the emailList');
+    }
+
+    emailList.forEach(async (email) => {
+      const user = await database.User.findOne({ where: { email } });
+      user.roleId = roleId;
+      user.save();
+    });
+  }
 }
 module.exports = UserService;

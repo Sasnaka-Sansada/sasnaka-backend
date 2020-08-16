@@ -1,4 +1,5 @@
 const Joi = require('@hapi/joi');
+const { Roles } = require('../database/models/role');
 
 const UserId = Joi.object().keys({
   id: Joi.string().uuid().required(),
@@ -13,7 +14,12 @@ const UpdateUser = Joi.object().keys({
     .required(),
 });
 
+const UpdateRole = Joi.object().keys({
+  emailList: Joi.array().items(Joi.string().email().max(1023).required()).required(),
+  roleId: Joi.string().valid(...Roles).required(),
+});
+
 
 module.exports = {
-  UserId, UpdateUser,
+  UserId, UpdateUser, UpdateRole,
 };

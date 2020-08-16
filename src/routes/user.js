@@ -5,5 +5,6 @@ const userController = require('../api/user');
 router.get('/sharableemails/list', userController.GetListEmailSharableUsers);
 router.get('/account/:id', userController.GetGetUser);
 router.put('/account/:id', userController.PutUpdateUser);
+router.put('/role', userController.PutUpdateRole);
 
 module.exports = router;

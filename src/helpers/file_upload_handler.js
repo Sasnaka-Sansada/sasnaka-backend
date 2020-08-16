@@ -52,7 +52,7 @@ const localUpload = async ({ file, folder }) => {
   }
 
   // return resource static url
-  return `http://${config.domain}:${config.port}/${folder}/${fileName}`;
+  return `http://${config.domain}/${folder}/${fileName}`;
 };
 
 /**

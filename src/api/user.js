@@ -1,6 +1,6 @@
 const UserService = require('../services/user');
 const {
-  UserId, UpdateUser,
+  UserId, UpdateUser, UpdateRole,
 } = require('../validators/user');
 
 /**
@@ -56,6 +56,24 @@ class UserController {
       if (error) throw (error);
       const user = await UserService.UpdateUser(value);
       res.send(user).status(200);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  /**
+   * Updates the role of a given list of users
+   * @static @async
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  static async PutUpdateRole(req, res, next) {
+    try {
+      const { value, error } = UpdateRole.validate(req.body);
+      if (error) throw (error);
+      await UserService.UpdateRole(value);
+      res.sendStatus(200);
     } catch (err) {
       next(err);
     }
