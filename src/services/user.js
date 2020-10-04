@@ -144,6 +144,23 @@ class UserService {
     };
   }
 
+  /**
+     * Returns all users
+     * @returns {User}[] Users
+  */
+  static async ListUsers() {
+    const database = await getDatabase();
+
+    const result = await database.User.findAll({
+      attributes: ['id', 'email', 'name', 'roleId'],
+      order: [['createdAt', 'DESC']],
+    });
+
+    // remove timestamp attributes
+    const users = result.map((user) => formatResponse(user));
+
+    return users;
+  }
 
   /**
      * Returns all users with email recieving capability

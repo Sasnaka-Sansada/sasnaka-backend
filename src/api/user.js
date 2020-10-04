@@ -10,6 +10,22 @@ const {
  */
 class UserController {
   /**
+   * Lists all users
+   * @static @async
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  static async GetListUsers(req, res, next) {
+    try {
+      const users = await UserService.ListUsers();
+      res.send(users).status(200);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  /**
    * Lists all users with email share capable roles
    * @static @async
    * @param {Request} req
