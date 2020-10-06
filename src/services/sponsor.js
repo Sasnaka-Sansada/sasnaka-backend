@@ -84,6 +84,8 @@ class SponsorService {
     // make titlecase
     const nameTitlecase = convertToTitleCase(name);
 
+    const date = calcCurrentTime('+5.5').toLocaleString();
+
     let sponsor;
 
     try {
@@ -94,9 +96,8 @@ class SponsorService {
         contactNumber,
         address,
         comment,
+        date,
       });
-
-      const date = calcCurrentTime('+5.5').toLocaleString();
 
       // find users that needed to be notified
       const notifiedUsers = await database.User.findAll({

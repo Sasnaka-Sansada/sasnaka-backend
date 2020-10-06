@@ -93,6 +93,8 @@ class ResourcePersonService {
     // make titlecase
     const nameTitlecase = convertToTitleCase(name);
 
+    const date = calcCurrentTime('+5.5').toLocaleString();
+
     let resourcePerson;
 
     try {
@@ -105,9 +107,8 @@ class ResourcePersonService {
         address,
         comment,
         type,
+        date,
       });
-
-      const date = calcCurrentTime('+5.5').toLocaleString();
 
       // find users that needed to be notified
       const notifiedUsers = await database.User.findAll({

@@ -2,6 +2,8 @@ const { getDatabase } = require('../helpers/get_database');
 const Errors = require('../helpers/errors');
 const logger = require('../helpers/logger');
 const { convertToTitleCase, formatResponse } = require('../helpers/minihelpers');
+const { calcCurrentTime } = require('../helpers/local_time');
+
 /**
  * Service that manages feedback functionalities
  * @abstract
@@ -29,6 +31,8 @@ class FeedbackService {
 
     let feedback;
 
+    const date = calcCurrentTime('+5.5').toLocaleString();
+
     try {
       // create feedback
       feedback = await database.Feedback.create({
@@ -36,6 +40,7 @@ class FeedbackService {
         email,
         message,
         visible,
+        date,
       });
     } catch (error) {
       logger.error(`Error while inserting data: ${error}`);
