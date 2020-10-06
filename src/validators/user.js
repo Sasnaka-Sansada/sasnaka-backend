@@ -12,6 +12,7 @@ const UpdateUser = Joi.object().keys({
   newPassword: Joi.string().max(1023).min(6).required(),
   profileImage: Joi.string().uri().max(1023).allow(null, '')
     .required(),
+  contactNumber: Joi.number().integer().min(1).max(10 ** 15),
 });
 
 const UpdateRole = Joi.object().keys({

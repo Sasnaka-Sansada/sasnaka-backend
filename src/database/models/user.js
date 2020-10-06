@@ -24,6 +24,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.ENUM(Roles),
       allowNull: false,
     },
+    contactNumber: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
     sponsorEmail: {
       type: Sequelize.BOOLEAN,
       defaultValue: false,

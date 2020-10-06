@@ -94,7 +94,7 @@ class UserService {
 
     const user = await database.User.findOne({
       where: { id },
-      attributes: ['id', 'email', 'name', 'profileImage', 'roleId'],
+      attributes: ['id', 'email', 'name', 'profileImage', 'roleId', 'contactNumber'],
     });
 
     if (!user) {
@@ -112,7 +112,7 @@ class UserService {
      * @returns {invitation} invitation created
   */
   static async UpdateUser({
-    id, name, oldPassword, newPassword, profileImage,
+    id, name, oldPassword, newPassword, profileImage, contactNumber,
   }) {
     const database = await getDatabase();
 
@@ -132,6 +132,7 @@ class UserService {
 
     user.name = name;
     user.profileImage = profileImage;
+    user.contactNumber = contactNumber;
 
     await user.save();
 
@@ -140,6 +141,7 @@ class UserService {
       email: user.email,
       name: user.name,
       profileImage: user.profileImage,
+      contactNumber: user.contactNumber,
       roleId: user.roleId,
     };
   }
@@ -152,7 +154,7 @@ class UserService {
     const database = await getDatabase();
 
     const result = await database.User.findAll({
-      attributes: ['id', 'email', 'name', 'roleId'],
+      attributes: ['id', 'email', 'name', 'roleId', 'contactNumber'],
       order: [['createdAt', 'DESC']],
     });
 
@@ -170,7 +172,7 @@ class UserService {
     const database = await getDatabase();
 
     const result = await database.User.findAll({
-      attributes: ['id', 'email', 'name', 'roleId'],
+      attributes: ['id', 'email', 'name', 'roleId', 'contactNumber'],
       where: {
         [Op.or]: [
           { roleId: Administrator },
