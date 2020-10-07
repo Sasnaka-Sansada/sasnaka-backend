@@ -67,7 +67,7 @@ class ProjectService {
         pillerId,
       });
     } catch (error) {
-      logger.error('Error while inserting data');
+      logger.error(`Error while inserting data:${error}`);
       throw new Errors.InternalServerError('Error while inserting data');
     }
 
@@ -191,7 +191,7 @@ class ProjectService {
     try {
       await project.save();
     } catch (error) {
-      logger.error('Error while inserting data');
+      logger.error(`Error while inserting data:${error}`);
       throw new Errors.InternalServerError('Error while inserting data');
     }
 

@@ -1,6 +1,6 @@
 
 const Entrepreneurship = 'ENTREPRENEURSHIP';
-const LeadershipGrooming = 'LEADERSHIP_GROOMING';
+const LeadershipGrooming = 'LEADERSHIP_AND_GROOMING';
 const SocialAndCommunity = 'SOCIAL_AND_COMMUNITY';
 const Steam = 'STEAM';
 const Pillers = [Entrepreneurship, LeadershipGrooming, SocialAndCommunity, Steam];

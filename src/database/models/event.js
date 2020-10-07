@@ -43,6 +43,9 @@ module.exports = (sequelize, Sequelize) => {
     updatedAt: {
       type: Sequelize.DATE,
     },
+  }, {
+    charset: 'utf8',
+    collate: 'utf8_unicode_ci',
   });
 
   // eslint-disable-next-line no-unused-vars
