@@ -1,19 +1,20 @@
 ## todo
-1. Change tests to match asset upload logic change
+- take a SSL certificate (https)
 2. role based access setting
-3. field validation discuss and finalize
-
-4. Deploy as soon as possible( Find the deploying platform first- Heroku??)
-- Check and fix npm vulnarabilities - done but recheck once deployed
-- turn image transformations on and add more optimizations once deployed and hosted
 - Configure sendgrid mail to other mode once deployed?? The maximum limit of sendgrid??
-5. Testing
 5. making mail noreply
 6. Change email button href in the .env and add twitter link
+8. remove CORS
+
+## done
+5. Testing
+- turn image transformations on and add more optimizations once deployed and hosted
+- Check and fix npm vulnarabilities - done but recheck once deployed
+4. Deploy as soon as possible( Find the deploying platform first- Heroku??)
+1. Change tests to match asset upload logic change
+3. field validation discuss and finalize
 7. Change HOST_DOMAIN in the .env to the correct domain for image, pdf static GET url to be correct and
  remove port number in helpers/file_upload_handler=>function localUpload=> line 55
-8. remove CORS
-## done
 - Build local file saving as well
 - Complete mail sending after discussing with oshan/ ruchira aiyala
 - Project update
