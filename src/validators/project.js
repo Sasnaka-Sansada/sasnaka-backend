@@ -13,6 +13,8 @@ const CreateProject = Joi.object().keys({
   objectiveImage: Joi.string().uri().max(1023).required(),
   processImage: Joi.string().uri().max(1023).required(),
   thumbnailImage: Joi.string().uri().max(1023).required(),
+  heroImage: Joi.string().uri().max(1023).required()
+    .allow(null, ''),
   pillerId: Joi.string().valid(...Pillers).required(),
 });
 
@@ -29,6 +31,8 @@ const UpdateProject = Joi.object().keys({
   objectiveImage: Joi.string().uri().max(1023).required(),
   processImage: Joi.string().uri().max(1023).required(),
   thumbnailImage: Joi.string().uri().max(1023).required(),
+  heroImage: Joi.string().uri().max(1023).required()
+    .allow(null, ''),
   pillerId: Joi.string().valid(...Pillers).required(),
 });
 

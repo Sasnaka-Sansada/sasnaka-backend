@@ -38,6 +38,7 @@ class ProjectService {
     processImage,
     thumbnailImage,
     pillerId,
+    heroImage,
   }) {
     const database = await getDatabase();
 
@@ -65,6 +66,7 @@ class ProjectService {
         processImage,
         thumbnailImage,
         pillerId,
+        heroImage,
       });
     } catch (error) {
       logger.error(`Error while inserting data:${error}`);
@@ -159,6 +161,7 @@ class ProjectService {
     processImage,
     thumbnailImage,
     pillerId,
+    heroImage,
   }) {
     const database = await getDatabase();
 
@@ -187,6 +190,7 @@ class ProjectService {
     project.processImage = processImage;
     project.thumbnailImage = thumbnailImage;
     project.pillerId = pillerId;
+    project.heroImage = heroImage;
 
     try {
       await project.save();

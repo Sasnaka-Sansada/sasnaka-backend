@@ -37,6 +37,7 @@ class EventService {
     date,
     subImages,
     projectId,
+    heroImage,
   }) {
     const database = await getDatabase();
     // make titlecase
@@ -67,6 +68,7 @@ class EventService {
           thumbnailTitle: thumbnailTitleTitlecase,
           date: dueDate,
           projectId,
+          heroImage,
         }, { transaction: t });
 
         // insert event id into subImages
@@ -160,6 +162,7 @@ class EventService {
     date,
     subImages,
     projectId,
+    heroImage,
   }) {
     const database = await getDatabase();
 
@@ -190,6 +193,7 @@ class EventService {
     event.thumbnailTitle = thumbnailTitleTitlecase;
     event.date = dueDate;
     event.projectId = projectId;
+    event.heroImage = heroImage;
 
     try {
       await database.sequelize.transaction(async (t) => {

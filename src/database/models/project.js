@@ -51,6 +51,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING(1023),
       allowNull: false,
     },
+    heroImage: {
+      type: Sequelize.STRING(1023),
+      allowNull: true,
+    },
     pillerId: {
       type: Sequelize.ENUM(Pillers),
     },

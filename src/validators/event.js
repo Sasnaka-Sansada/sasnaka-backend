@@ -12,6 +12,8 @@ const CreateEvent = Joi.object().keys({
     .allow(null, ''),
   thumbnailImage: Joi.string().uri().max(1023).required(),
   subImages: Joi.array().items(Joi.string().uri().max(1023)).required().allow(null),
+  heroImage: Joi.string().uri().max(1023).required()
+    .allow(null, ''),
   projectId: Joi.string().uuid().required(),
 });
 
@@ -28,6 +30,8 @@ const UpdateEvent = Joi.object().keys({
     .allow(null, ''),
   thumbnailImage: Joi.string().uri().max(1023).required(),
   subImages: Joi.array().items(Joi.string().uri().max(1023)).required().allow(null),
+  heroImage: Joi.string().uri().max(1023).required()
+    .allow(null, ''),
   projectId: Joi.string().uuid().required(),
 });
 

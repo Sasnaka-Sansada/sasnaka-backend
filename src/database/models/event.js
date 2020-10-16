@@ -37,6 +37,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.DATE,
       allowNull: false,
     },
+    heroImage: {
+      type: Sequelize.STRING(1023),
+      allowNull: true,
+    },
     createdAt: {
       type: Sequelize.DATE,
     },
