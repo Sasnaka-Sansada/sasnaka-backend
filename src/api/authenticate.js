@@ -58,6 +58,22 @@ class authController {
       next(err);
     }
   }
+
+  /**
+   * Gets user details from the request.user( created by the passport.js using the session)
+   * @static @async
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  static async GetUserBySessionId(req, res, next) {
+    try {
+      const user = await UserService.GetUserFromSession(req.user);
+      res.send(user).status(200);
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = authController;

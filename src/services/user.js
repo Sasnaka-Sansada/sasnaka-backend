@@ -85,6 +85,24 @@ class UserService {
   }
 
   /**
+     * Gets user details of an given user by destructuring the req.user param
+     * @param {string} id uuid of the user
+     * @param {string} email email of the user
+     * @param {string} name name of the user
+     * @param {string} profileImage profileImage of the user
+     * @param {string} roleId roleId of the user
+     * @returns {Object} user
+  */
+  static async GetUserFromSession({
+    id, email, name, profileImage, roleId,
+  }) {
+    return {
+      id, email, name, profileImage, roleId,
+    };
+  }
+
+
+  /**
      * Gets user details of an given user id
      * @param {string} id uuid of the user
      * @returns {Object} user
