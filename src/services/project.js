@@ -117,7 +117,7 @@ class ProjectService {
           {
             model: database.Cordinator,
             attributes: ['id', 'name', 'profileImage'],
-            as: 'alumniProjects',
+            as: 'cordinator',
           },
         ],
       },
