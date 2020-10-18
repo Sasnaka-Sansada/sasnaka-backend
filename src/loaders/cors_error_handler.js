@@ -1,3 +1,5 @@
+const config = require('../config');
+
 /**
  * This middleware avoids cors errors due to the same origin
  * Lets the backend server and the front end to be run in the same device
@@ -8,7 +10,7 @@
  * @param {NextFunction} next Next callback
  */
 const corsErrorHandlerMiddleware = (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://openinventoryorg.github.io/web-frontend/#/');
+  res.header('Access-Control-Allow-Origin', config.registerURL);
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 };

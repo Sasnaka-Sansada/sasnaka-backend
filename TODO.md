@@ -5,6 +5,7 @@
 5. making mail noreply
 6. Change email button href in the .env and add twitter link
 8. remove CORS
+- CRON job
 
 ## done
 5. Testing

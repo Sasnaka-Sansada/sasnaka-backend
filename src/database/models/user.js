@@ -36,6 +36,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.BOOLEAN,
       defaultValue: false,
     },
+    feedbackEmail: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
+    },
     profileImage: {
       type: Sequelize.STRING(1023),
     },
