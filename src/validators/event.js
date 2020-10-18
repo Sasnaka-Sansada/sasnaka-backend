@@ -3,9 +3,9 @@ const Joi = require('@hapi/joi');
 const CreateEvent = Joi.object().keys({
   headerTitle: Joi.string().max(255).required(),
   headerSinhalaTitle: Joi.string().max(255).required().allow(null, ''),
-  headerDescription: Joi.string().max(255).required().allow(null, ''),
-  contentDescription: Joi.string().max(255).required().allow(null, ''),
-  thumbnailDescription: Joi.string().max(255).required().allow(null, ''),
+  headerDescription: Joi.string().required().allow(null, ''),
+  contentDescription: Joi.string().required().allow(null, ''),
+  thumbnailDescription: Joi.string().required().allow(null, ''),
   thumbnailTitle: Joi.string().max(255).required(),
   date: Joi.date().required(),
   contentImage: Joi.string().uri().max(1023).required()
@@ -21,9 +21,9 @@ const UpdateEvent = Joi.object().keys({
   id: Joi.string().uuid().required(),
   headerTitle: Joi.string().max(255).required(),
   headerSinhalaTitle: Joi.string().max(255).required().allow(null, ''),
-  headerDescription: Joi.string().max(255).required().allow(null, ''),
-  contentDescription: Joi.string().max(255).required().allow(null, ''),
-  thumbnailDescription: Joi.string().max(255).required().allow(null, ''),
+  headerDescription: Joi.string().required().allow(null, ''),
+  contentDescription: Joi.string().required().allow(null, ''),
+  thumbnailDescription: Joi.string().required().allow(null, ''),
   thumbnailTitle: Joi.string().max(255).required(),
   date: Joi.date().required(),
   contentImage: Joi.string().uri().max(1023).required()
