@@ -21,6 +21,7 @@ const SessionManagerMiddleware = () => {
     saveUninitialized: false,
     cookie: {
       maxAge: 30 * 24 * 60 * 60 * 1000, // 1 month
+      httpOnly: false,
     },
     store: new SequelizeStore({
       db: sequelize,
