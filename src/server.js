@@ -1,15 +1,15 @@
 const express = require('express');
-const passport = require('passport');
+// const passport = require('passport');
 const multer = require('multer');
 const cors = require('cors');
 const helmet = require('helmet');
 const routes = require('./routes');
-const { passportConfig } = require('./config/passport');
+// const { passportConfig } = require('./config/passport');
 const { ErrorHandlerMiddleware } = require('./loaders/error_handler');
-const { SessionManagerMiddleware } = require('./loaders/session_manager');
+// const { SessionManagerMiddleware } = require('./loaders/session_manager');
 const { initialize } = require('./loaders/initial_setup');
 const { initializeCloudinary } = require('./loaders/initialize_cloudinary');
-
+const { jwtAuthMiddleware } = require('./loaders/jwt_auth');
 
 const app = express();
 
@@ -22,16 +22,8 @@ initializeCloudinary();
 // applying the middleware for parsing request bodies
 app.use(require('body-parser').json());
 
-
-const corsOptions = {
-  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'X-Access-Token', 'Authorization'],
-  credentials: true,
-  methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
-  origin: 'http://test.sasnaka.org',
-  preflightContinue: false,
-};
 // to avoid cross origin error. remove in production
-app.use(cors(corsOptions));
+app.use(cors());
 
 // for parsing application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
@@ -46,19 +38,22 @@ app.use(express.static('public/uploads'));
 require('./database/models');
 
 // session middleware
-app.use(SessionManagerMiddleware());
+// app.use(SessionManagerMiddleware());
 
 // configure passport
-passportConfig(passport);
+// passportConfig(passport);
 
 // initialize passportjs
-app.use(passport.initialize());
+// app.use(passport.initialize());
 
 // use passport sessions
-app.use(passport.session());
+// app.use(passport.session());
 
 // initial db configuation
 initialize();
+
+// Authentication Layer
+app.use(jwtAuthMiddleware);
 
 // routing
 routes.endPointsHandler(app);

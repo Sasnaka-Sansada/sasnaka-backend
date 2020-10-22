@@ -1,4 +1,4 @@
-const passport = require('passport');
+// const passport = require('passport');
 const Errors = require('../helpers/errors');
 /**
  * This should be added as an middleware
@@ -8,30 +8,18 @@ const Errors = require('../helpers/errors');
  * @param {Response} res Response
  * @param {NextFunction} next Next callback
  * */
-const AuthMiddleware = () => passport.authenticate('local');
+// const AuthMiddleware = () => passport.authenticate('local');
 
 const IsLoggedMiddleware = () => (req, res, next) => {
-  try {
-    if (req.user) {
-      next();
-    } else {
-      throw new Errors.Unauthorized('Not logged in');
-    }
-  } catch (err) {
-    next(err);
-  }
+  const { authenticated } = req;
+  if (!authenticated) throw new Errors.Unauthorized('Not logged in');
+  next();
 };
 
 const IsNotLoggedMiddleware = () => (req, res, next) => {
-  try {
-    if (!req.user) {
-      next();
-    } else {
-      throw new Errors.Unauthorized('Already logged in');
-    }
-  } catch (err) {
-    next(err);
-  }
+  const { authenticated } = req;
+  if (authenticated) throw new Errors.Forbidden('Already logged in');
+  next();
 };
 
 const IsPermittedMiddleware = (roleId) => (req, res, next) => {
@@ -51,5 +39,5 @@ const IsPermittedMiddleware = (roleId) => (req, res, next) => {
 };
 
 module.exports = {
-  AuthMiddleware, IsLoggedMiddleware, IsPermittedMiddleware, IsNotLoggedMiddleware,
+  IsLoggedMiddleware, IsPermittedMiddleware, IsNotLoggedMiddleware,
 };
