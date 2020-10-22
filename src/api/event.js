@@ -91,6 +91,7 @@ class EventController {
    */
   static async GetListEvents(req, res, next) {
     try {
+      console.dir(req.session.cookie);
       const events = await EventService.ListEvents();
       res.send(events).status(200);
     } catch (err) {

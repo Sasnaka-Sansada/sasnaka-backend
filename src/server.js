@@ -22,8 +22,16 @@ initializeCloudinary();
 // applying the middleware for parsing request bodies
 app.use(require('body-parser').json());
 
+
+const corsOptions = {
+  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'X-Access-Token', 'Authorization'],
+  credentials: true,
+  methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
+  origin: 'http://test.sasnaka.org',
+  preflightContinue: false,
+};
 // to avoid cross origin error. remove in production
-app.use(cors());
+app.use(cors(corsOptions));
 
 // for parsing application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));

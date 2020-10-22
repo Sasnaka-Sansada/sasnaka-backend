@@ -17,13 +17,15 @@ const SessionManagerMiddleware = () => {
 
   return expressSession({
     secret: config.sessionSecret,
-    resave: false,
+    resave: true,
     saveUninitialized: false,
     cookie: {
-      domain: config.cookieDomain,
+      domain: '.sasnaka.org',
       maxAge: 30 * 24 * 60 * 60 * 1000, // 1 month
       httpOnly: false,
-      sameSite: false,
+      sameSite: 'none',
+      secure: false,
+      path: '/',
     },
     store: new SequelizeStore({
       db: sequelize,
