@@ -43,7 +43,7 @@ class authController {
     }
   }
 
-  /**
+  /** DEPRICIATED
    * Logs out a user from the system
    * @static @async
    * @param {Request} req
@@ -59,7 +59,7 @@ class authController {
     }
   }
 
-  /**
+  /** DEPRICIATED
    * Gets user details from the request.user( created by the passport.js using the session)
    * @static @async
    * @param {Request} req

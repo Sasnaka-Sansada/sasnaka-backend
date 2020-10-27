@@ -37,18 +37,6 @@ app.use(express.static('public/uploads'));
 // connecting to the database
 require('./database/models');
 
-// session middleware
-// app.use(SessionManagerMiddleware());
-
-// configure passport
-// passportConfig(passport);
-
-// initialize passportjs
-// app.use(passport.initialize());
-
-// use passport sessions
-// app.use(passport.session());
-
 // initial db configuation
 initialize();
 

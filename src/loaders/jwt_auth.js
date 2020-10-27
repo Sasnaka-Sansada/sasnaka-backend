@@ -1,4 +1,5 @@
 const { jwtVerify } = require('../helpers/jwt');
+const UserService = require('../services/user');
 
 /**
  * Middleware that intercepts the request of a user and
@@ -17,12 +18,13 @@ const { jwtVerify } = require('../helpers/jwt');
  * @param {Response} res Response
  * @param {NextFunction} next Next callback
  */
-const jwtAuthMiddleware = (req, res, next) => {
+const jwtAuthMiddleware = async (req, res, next) => {
   const token = req.get('token');
   try {
     if (!token) throw Error('JWT Invalid');
     // Will throw an error if verification failed
-    const user = jwtVerify(token);
+    const { id } = jwtVerify(token);
+    const user = await UserService.GetUser({ id });
     req.user = user;
     req.authenticated = true;
   } catch (ignored) {

@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config');
+const logger = require('./logger');
 
 /**
  * Signs a user using the JWT secret.
@@ -11,25 +12,15 @@ const config = require('../config');
  * the user permission/roles change.
  * @param {Object} user User details object
  * @param {string} user.id User id
- * @param {string} user.firstName User first name
- * @param {string} user.lastName User last name
  * @param {string} user.email User email address
- * @param {string[]} user.permissions List of permissions of the user
- * @param {string} user.role Role of the user
- * @param {string} user.roleId Id of the role
  * @returns {string} signed JWT token
  */
 const jwtSign = ({
-  id, firstName, lastName, email, permissions, role, roleId,
+  id, email,
 }) => jwt.sign(
   {
     id,
-    firstName,
-    lastName,
     email,
-    permissions,
-    role,
-    roleId,
   },
   config.jwtSecret,
 );
@@ -42,6 +33,14 @@ const jwtSign = ({
  * @param {string} token JWT string to verify
  * @returns {user} The decoded token which contains user information.
  */
-const jwtVerify = (token) => jwt.verify(token, config.jwtSecret);
+const jwtVerify = (token) => {
+  let verification;
+  try {
+    verification = jwt.verify(token, config.jwtSecret);
+  } catch (error) {
+    logger.error(error);
+  }
+  return verification;
+};
 
 module.exports = { jwtSign, jwtVerify };

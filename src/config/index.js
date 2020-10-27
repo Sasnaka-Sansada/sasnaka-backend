@@ -31,6 +31,7 @@ const configurations = {
   },
   saltRounds: parseInt(process.env.SALT_ROUNDS, 10) || 10,
   sessionSecret: process.env.SESSION_SECRET || '',
+  jwtSecret: process.env.JWT_SECRET || '',
   registerURL: process.env.REGISTERURL || '',
 };
 

@@ -3,6 +3,7 @@ const { getDatabase } = require('../helpers/get_database');
 const Errors = require('../helpers/errors');
 const logger = require('../helpers/logger');
 const { hashPassword, comparePassword } = require('../helpers/password');
+const { jwtSign } = require('../helpers/jwt');
 const { formatResponse } = require('../helpers/minihelpers');
 const { Administrator, EditorLevelA, EditorLevelD } = require('../database/models/role');
 
@@ -73,18 +74,39 @@ class UserService {
      * @param {roleId} email to be invited to
      * @returns {invitation} invitation created
   */
-  static async LoginUser({ email }) {
+  static async LoginUser({ email, password }) {
     const database = await getDatabase();
 
-    const user = await database.User.findOne({
+    let user = await database.User.findOne({
       where: { email },
-      attributes: ['id', 'email', 'name', 'profileImage', 'roleId'],
+      attributes: ['id', 'email', 'name', 'profileImage', 'roleId', 'password'],
     });
 
-    return user;
+    // Check user existence
+    if (!user) throw new Errors.BadRequest('Email isn\'t registered in the system');
+
+    user = formatResponse(user);
+    // Authenticate user password
+    const isValid = await comparePassword(password, user.password);
+    if (!isValid) throw new Errors.BadRequest('Email/Password mismatch');
+
+    const userInformation = { id: user.id, email: user.email };
+    // Get a json copy of model and format it to add the fields we need
+    // const userInformation = JSON.stringify(jwtInfo);
+
+    const signedJwt = jwtSign(userInformation);
+
+    return {
+      token: signedJwt,
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      profileImage: user.profileImage,
+      roleId: user.roleId,
+    };
   }
 
-  /**
+  /** DEPRICIATED
      * Gets user details of an given user by destructuring the req.user param
      * @param {string} id uuid of the user
      * @param {string} email email of the user
