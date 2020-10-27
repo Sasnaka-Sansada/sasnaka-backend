@@ -13,4 +13,8 @@ const Login = Joi.object().keys({
   password: Joi.string().max(1023).min(6).required(),
 });
 
-module.exports = { Registration, Login };
+const RegistrationToken = Joi.object().keys({
+  token: Joi.string().required(),
+});
+
+module.exports = { Registration, Login, RegistrationToken };

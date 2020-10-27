@@ -14,6 +14,35 @@ const { Administrator, EditorLevelA, EditorLevelD } = require('../database/model
  */
 class UserService {
   /**
+     * Verifies whether a registration token is valid.
+     *
+     * This checks if the user already has a token and it is valid.
+     * Then this will return the user details associated with the token.
+     * If the token is invalid, this will throw an error.
+     * @param {string} token Registration token
+     * @returns {Promise<any>} Associated user details
+     */
+  static async VerifyRegistrationToken(token) {
+    const database = await getDatabase();
+
+    // Token Should be Created, Valid in order
+    // To be verified
+
+    const existingToken = await database.RegistrationToken
+      .findOne({
+        where: { token, valid: true },
+        attributes: ['email', ['assignedRoleId', 'roleId']],
+        include: [{ model: database.Role, attributes: ['name'] }],
+      });
+    if (!existingToken) {
+      throw new Errors.BadRequest('Invalid token');
+    }
+
+    return existingToken;
+  }
+
+
+  /**
      * Creates an account for a user in the system
      * @param {string} email to be invited to
      * @param {string} roleId to be invited to

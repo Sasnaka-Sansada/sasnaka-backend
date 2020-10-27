@@ -1,5 +1,5 @@
 const UserService = require('../services/user');
-const { Registration, Login } = require('../validators/authenticate');
+const { Registration, Login, RegistrationToken } = require('../validators/authenticate');
 
 /**
  * Controller which manages registration
@@ -70,6 +70,25 @@ class authController {
     try {
       const user = await UserService.GetUserFromSession(req.user);
       res.send(user).status(200);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  /**
+     * Uses an email token and returns user details of the associated user
+     * @param {Request} req Request
+     * @param {Response} res Response
+     * @param {NextFunction} next Next callback
+     */
+  static async Verify(req, res, next) {
+    try {
+      const { value, error } = RegistrationToken.validate({ token: req.params.token });
+      if (error) throw error;
+
+      const registrationToken = await UserService
+        .VerifyRegistrationToken(value.token);
+      res.status(200).send(registrationToken);
     } catch (err) {
       next(err);
     }
