@@ -28,15 +28,24 @@ class UserService {
     // Token Should be Created, Valid in order
     // To be verified
 
-    const existingToken = await database.RegistrationToken
+    let existingToken = await database.Invitation
       .findOne({
-        where: { token, valid: true },
-        attributes: ['email', ['assignedRoleId', 'roleId']],
-        include: [{ model: database.Role, attributes: ['name'] }],
+        where: { token },
+        attributes: ['email', 'roleId'],
       });
     if (!existingToken) {
       throw new Errors.BadRequest('Invalid token');
     }
+
+    const currentUser = await database.User.findOne({
+      where: { email: existingToken.email },
+    });
+
+    if (currentUser) {
+      throw new Errors.BadRequest('The user is already registered in the system');
+    }
+
+    existingToken = formatResponse(existingToken);
 
     return existingToken;
   }
