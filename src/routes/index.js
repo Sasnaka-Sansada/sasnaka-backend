@@ -13,6 +13,7 @@ const userRoutes = require('./user');
 const assetRoutes = require('./asset');
 const contactRoutes = require('./contact');
 const bannerRoutes = require('./banner');
+const mediaCordinatorRoutes = require('./media_cordinator');
 
 // routes dividing into subroutes
 const endPointsHandler = (app) => {
@@ -31,6 +32,7 @@ const endPointsHandler = (app) => {
   app.use('/api/asset', assetRoutes);
   app.use('/api/contact', contactRoutes);
   app.use('/api/banner', bannerRoutes);
+  app.use('/api/mediacordinator', mediaCordinatorRoutes);
 };
 
 module.exports = { endPointsHandler };
