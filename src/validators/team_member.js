@@ -4,7 +4,7 @@ const CreateTeamMember = Joi.object().keys({
   name: Joi.string().max(255).required(),
   position: Joi.string().max(1023).required(),
   achievements: Joi.string().required(),
-  description: Joi.string().required(),
+  description: Joi.string().allow(null, '').required(),
   profileImage: Joi.string().uri().max(1023).required(),
   linkedin: Joi.string().uri().max(255).allow(null, '')
     .required(),
@@ -20,7 +20,7 @@ const UpdateTeamMember = Joi.object().keys({
   name: Joi.string().max(255).required(),
   position: Joi.string().max(1023).required(),
   achievements: Joi.string().required(),
-  description: Joi.string().required(),
+  description: Joi.string().allow(null, '').required(),
   profileImage: Joi.string().uri().max(1023).required(),
   linkedin: Joi.string().uri().max(255).allow(null, '')
     .required(),

@@ -19,7 +19,6 @@ module.exports = (sequelize, Sequelize) => {
     },
     description: {
       type: Sequelize.TEXT,
-      allowNull: false,
     },
     linkedin: {
       type: Sequelize.STRING,

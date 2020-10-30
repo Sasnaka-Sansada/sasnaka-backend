@@ -200,12 +200,14 @@ class UserService {
       throw new Errors.BadRequest('Invalid user id');
     }
 
-    const correctOldPassword = await comparePassword(oldPassword, user.dataValues.password);
+    if (oldPassword !== null && oldPassword !== '' && newPassword !== null && newPassword !== '') {
+      const correctOldPassword = await comparePassword(oldPassword, user.dataValues.password);
 
-    if (correctOldPassword) {
-      user.password = await hashPassword(newPassword);
-    } else {
-      throw new Errors.BadRequest('Invalid old password');
+      if (correctOldPassword) {
+        user.password = await hashPassword(newPassword);
+      } else {
+        throw new Errors.BadRequest('Invalid old password');
+      }
     }
 
     user.name = name;
