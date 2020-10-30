@@ -1,6 +1,7 @@
 node_modules
 .env
 public/uploads/*
+public/static_data/*
 !public/uploads/.gitkeep
 pgdata
 pgdata_test
