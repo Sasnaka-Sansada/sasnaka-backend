@@ -6,6 +6,7 @@ const CreateMediaCordinator = Joi.object().keys({
   description: Joi.string().allow(null, '').required(),
   alumni: Joi.bool().required(),
   profileImage: Joi.string().uri().max(1023).required(),
+  type: Joi.string().max(255).required(),
 });
 
 const UpdateMediaCordinator = Joi.object().keys({
@@ -15,6 +16,7 @@ const UpdateMediaCordinator = Joi.object().keys({
   description: Joi.string().allow(null, '').required(),
   alumni: Joi.bool().required(),
   profileImage: Joi.string().uri().max(1023).required(),
+  type: Joi.string().max(255).required(),
 });
 
 const MediaCordinatorId = Joi.object().keys({

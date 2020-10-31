@@ -19,6 +19,7 @@ class MediaCordinatorService {
      * @param {string} description desctiption of the media cordinator
      * @param {boolean} alumni type of the media cordinator
      * @param {string} profileImage profileImage of the media cordinator
+     * @param {string} type type of the media cordinator
      * @param {string}[] alumniProjects projects the media cordinator has cordinated in the past
      * @returns {string} projectId projectId of the media cordinator
   */
@@ -28,6 +29,7 @@ class MediaCordinatorService {
     description,
     alumni,
     profileImage,
+    type,
   }) {
     const database = await getDatabase();
 
@@ -44,6 +46,7 @@ class MediaCordinatorService {
         description,
         alumni,
         profileImage,
+        type,
       });
     } catch (error) {
       logger.error('Error while inserting data');
@@ -102,6 +105,7 @@ class MediaCordinatorService {
      * @param {string} description desctiption of the media cordinator
      * @param {boolean} alumni type of the media cordinator
      * @param {string} profileImage profileImage of the media cordinator
+     * @param {string} type type of the media cordinator
      * @returns {string} projectId projectId of the media cordinator
   */
   static async UpdateMediaCordinator({
@@ -111,6 +115,7 @@ class MediaCordinatorService {
     description,
     alumni,
     profileImage,
+    type,
   }) {
     const database = await getDatabase();
 
@@ -128,6 +133,7 @@ class MediaCordinatorService {
     mediaCordinator.description = description;
     mediaCordinator.alumni = alumni;
     mediaCordinator.profileImage = profileImage;
+    mediaCordinator.type = type;
 
     try {
       await mediaCordinator.save();
