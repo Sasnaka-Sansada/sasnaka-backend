@@ -73,7 +73,7 @@
     "eslint-plugin-react-hooks": "^4.0.0",
     "jest": "^26.1.0",
     "jsdoc": "^3.6.4",
-    "nodemon": "^2.0.4",
+    "nodemon": "^2.0.6",
     "prettier": "^2.0.5",
     "sequelize-cli": "^5.5.1",
     "supertest": "^4.0.2"
