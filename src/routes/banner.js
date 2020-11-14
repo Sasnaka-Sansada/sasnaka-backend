@@ -1,10 +1,13 @@
 const router = require('express').Router();
-// const { AuthMiddleware, IsLoggedMiddleware } = require('../loaders/authenticator');
 const bannerController = require('../api/banner');
+const {
+  Administrator, EditorLevelA, EditorLevelB,
+} = require('../database/models/role');
+const { IsPermittedMiddleware, IsLoggedMiddleware } = require('../loaders/authenticator');
 
-router.post('/create', bannerController.PostCreateBanner);
-router.delete('/:id', bannerController.DeleteDeleteBanner);
+router.post('/create', IsLoggedMiddleware(), IsPermittedMiddleware([Administrator, EditorLevelA, EditorLevelB]), bannerController.PostCreateBanner);
+router.delete('/:id', IsLoggedMiddleware(), IsPermittedMiddleware([Administrator, EditorLevelA, EditorLevelB]), bannerController.DeleteDeleteBanner);
 router.get('/list', bannerController.GetListBanners);
-router.put('/:id', bannerController.PutUpdateBanner);
+router.put('/:id', IsLoggedMiddleware(), IsPermittedMiddleware([Administrator, EditorLevelA, EditorLevelB]), bannerController.PutUpdateBanner);
 
 module.exports = router;

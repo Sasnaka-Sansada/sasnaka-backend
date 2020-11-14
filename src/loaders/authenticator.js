@@ -22,10 +22,10 @@ const IsNotLoggedMiddleware = () => (req, res, next) => {
   next();
 };
 
-const IsPermittedMiddleware = (roleId) => (req, res, next) => {
+const IsPermittedMiddleware = (roles) => (req, res, next) => {
   try {
     if (req.user) {
-      if (roleId === req.user.roleId) {
+      if (req.user.roleId in roles) {
         next();
       } else {
         throw new Errors.Unauthorized('Insufficient Permissions');

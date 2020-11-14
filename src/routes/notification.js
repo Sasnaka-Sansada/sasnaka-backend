@@ -1,11 +1,14 @@
 const router = require('express').Router();
-// const { AuthMiddleware, IsLoggedMiddleware } = require('../loaders/authenticator');
+const {
+  Administrator, EditorLevelA,
+} = require('../database/models/role');
+const { IsPermittedMiddleware, IsLoggedMiddleware } = require('../loaders/authenticator');
 const coordinatorController = require('../api/notification');
 
 router.get('/list', coordinatorController.GetListNotifications);
-router.post('/create', coordinatorController.PostCreateNotification);
-router.delete('/:id', coordinatorController.DeleteDeleteNotification);
+router.post('/create', IsLoggedMiddleware(), IsPermittedMiddleware([Administrator, EditorLevelA]), coordinatorController.PostCreateNotification);
+router.delete('/:id', IsLoggedMiddleware(), IsPermittedMiddleware([Administrator, EditorLevelA]), coordinatorController.DeleteDeleteNotification);
 router.get('/:id', coordinatorController.GetGetNotification);
-router.put('/:id', coordinatorController.PutUpdateNotification);
+router.put('/:id', IsLoggedMiddleware(), IsPermittedMiddleware([Administrator, EditorLevelA]), coordinatorController.PutUpdateNotification);
 
 module.exports = router;
