@@ -25,29 +25,27 @@ This repository contains the backend API for the sasnaka-sansada web application
 ##  Configuration
 1. Download and install nodeJS to your device from the official website.
 [https://nodejs.org/en/download/](https://nodejs.org/en/download/)
-2. Download and install PostgreSQL.
-[https://www.postgresql.org/download/](https://www.postgresql.org/download/)
+2. Download and install MySQL.
+[MySQL Official Download Page](https://www.mysql.com/downloads/)
 3. Create a user and a database.
-	a. Method I - Using the CLI 
-		Please refer this document for step by step instructions
-		[How to manage PostgreSQL databases and users from the command line](https://www.a2hosting.com/kb/developer-corner/postgresql/managing-postgresql-databases-and-users-from-the-command-line)
-	b. Method II - Using gpAdmin 4
-	Download, install pgAdmin 4 and create a user and a database using the GUI.
-	[https://www.pgadmin.org/download/](https://www.pgadmin.org/download/)
-		 
 4. Clone the git repository by running the following command
 	```bash
 	git clone https://github.com/Sasnaka-Sansada/sasnaka-backend.git
 	```
-5. Open the command prompt/ terminal inside the repository and run, 
+5. Create a .env file inside the root directory and add configuration variables to the file. Please see the sample.env file as an example.
+6. Open the command prompt/ terminal inside the repository and run, 
 	```bash 
 	npm install
 	```
-6. Create a .env file inside the /src  directory and add configuration variables to the file. Please request the file content from a system administrator. 
+
 Change the env variables to add new database connection variables.
-7.  Run below command to start the server in the development mode.
+1.  Run below command to start the server in the development mode. The server will be running in the 8080 port
 ```bash 
 	npm run dev
+```
+2. Run below command to start the server in the production mode.
+```bash 
+	npm run start
 ```
 
 ## Contributors
