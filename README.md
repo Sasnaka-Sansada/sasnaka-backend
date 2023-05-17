@@ -43,7 +43,7 @@ Change the env variables to add new database connection variables.
 ```bash 
 	npm run dev
 ```
-2. Run below command to start the server in the production mode.
+2. Run below command to start the server in production mode.
 ```bash 
 	npm run start
 ```
